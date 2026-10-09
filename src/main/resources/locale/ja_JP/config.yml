@@ -1,0 +1,109 @@
+#### Matrix 設定 - config.yml ####################################################
+#
+#     こんにちは、Matrix アンチチートへようこそ。これは config.yml で、
+#  Matrix のグローバル設定を定義するために使用されます。
+#
+#  - 問題が発生した場合は、公式 Discord でサポートを受けてください：
+#    https://discord.gg/pEvY55J
+#
+#  便利なリンク：
+#    Website: https://matrix.rip
+#    Discord: https://discord.gg/pEvY55J
+#    Wiki: https://wiki.matrix.rip
+#    Issue Tracker: https://github.com/jiangdashao/Matrix-Issues/issues
+#
+#  Matrix アンチチートをご利用いただきありがとうございます！
+#
+#####################################################################################
+
+# オフラインプランモード
+# 有効にすると、Matrix はすべてのライセンス検証リクエストをスキップし、
+# ライセンスサーバーに接続せずに Enterprise プランの全機能で動作します。
+offline-plan: true
+
+# 起動時にアップデートを確認しますか？
+check_update: true
+
+# アクセストークンをここに入力してください。https://localhost/offline（Client - Token）から取得できます
+# アクセストークンを他人と共有しないでください！
+# PluginCloud からプラグインをダウンロードした場合、手動入力は不要です
+# access_token: ''
+
+# 権限キャッシュの更新間隔（単位：秒、デフォルト：15）
+permission_refresh_interval: 15
+
+# BungeeCord GeyserMC サポートを有効にしますか？
+# Matrix は GeyserMC を実行する 2 つの方法をサポートしています：
+#   1. Spigot モード：Spigot に GeyserMC/FloodGate をインストール。この設定の変更は不要で、Matrix が自動的にサポートします
+#   2. Bungee モード：GeyserMC が BungeeCord にインストールされている場合、このオプションを有効にし、BungeeCord にも Matrix をインストールする必要があります
+# !!!    BungeeCord に GeyserMC をインストールしていない場合は、このオプションを有効にしないでください
+bungee_geysermc_support: false
+
+# /matrix kick で誰かがキックされた時に雷のビジュアルエフェクトを表示しますか？
+kick_strike_lightning: true
+
+# Discord Webhook
+discord_webhook:
+  # Discord Webhook を有効にする
+  enable: false
+
+  # Webhook URL
+  url: ''
+
+# サーバーラグ保護
+# サーバーがラグしている時に一部の検出を自動的に無効にします。
+# これによりほとんどの（すべてではない）誤検知を防ぐことができます。
+tps_protection:
+  # この機能を有効にしますか？
+  enable: true
+
+  # 保護をトリガーするために必要な最低 TPS
+  min_tps: 17.0
+
+  # ラグスパイク閾値（ミリ秒）
+  # サーバーが一定時間応答しない場合、検出を無効にします
+  lag_threshold: 1000
+
+# 違反ログ（デフォルト：true）
+# すべての違反をファイルに記録します。ファイルは /plugins/Matrix/logs にあります
+# 警告：BungeeCord を使用している場合、FALSE に設定することを推奨します。
+# これにより不要なログファイルの保存とディスクスペースの消費を防ぎます。
+log_file: true
+
+# 期限切れログファイルの削除（日）
+# ログファイルが指定日数以上保存されている場合、削除されます
+# -1 に設定するとこの機能を無効にできます
+delete_time: 30
+
+# バイパス権限を無効化（デフォルト：false）
+# TRUE に設定すると、Matrix はサーバー上の全員（OP 権限を持つプレイヤーを含む）を
+# 強制的にチェックします。TRUE に設定することで、OP 権限を削除せずに
+# 必要なテストを実行できます。
+disable_bypass_permission: false
+
+## 再ログイン待ち時間
+# プレイヤーがキックされてからログインが許可されるまでの時間（秒）
+# -1 に設定するとこの機能を無効にできます
+relog_time: 5
+
+# ヘルスインジケーター対策
+# 有効にすると、Matrix はクライアントに送信するプレイヤーの体力値を変更し、
+# Mod を使用して他のプレイヤーの体力を表示することを防ぎます。
+anti-health-indicator: true
+
+# ping 難読化
+# 有効にすると、Matrix はプレイヤーの ping（TAB リストのみ）を 0 に設定します。
+# これにより一部のチートクライアントのアンチボット機能を混乱させ、
+# すべてのプレイヤーをボットとして扱わせることができます。
+ping-obfuscation: true
+
+# 無効化コンポーネント
+# 検出全体を無効にする代わりに、特定のサブチェックをここで無効にできます。
+# コンポーネント名は verbose メッセージの末尾で確認できます。
+# 例："speed.web" を追加すると、高速ウェブチェックが無効になります
+disabled_components:
+  - 'example entry'
+
+# カスタム VL ウェイト（形式：コンポーネント名:新しい VL ウェイト）
+custom_vl_weight:
+  - 'example_component:5'

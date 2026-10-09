@@ -1,0 +1,1 @@
+{"id":"matrixbungee","name":"MatrixBungee","version":"1.0.0","description":"Matrix Geyser Support for Velocity Proxy","authors":["RE"],"dependencies":[{"id":"geyser","optional":true},{"id":"floodgate","optional":true}],"main":"me.rerere.matrix.proxy.velocity.MatrixVelocity"}

@@ -1,0 +1,172 @@
+name: Matrix
+version: '7.25.1'
+main: me.rerere.matrix.Matrix
+website: https://matrix.rip
+api-version: 1.13
+authors: [RE, MIYU]
+folia-supported: true
+description: An advanced anticheat for your Minecraft server
+#depend:
+#  - packetevents
+softdepend:
+  - ProtocolLib
+  - ProtocolSupport
+  - ViaVersion
+  - ViaBackwards
+  - ViaRewind
+  - Geyser-Spigot
+  - PlaceholderAPI
+  - VeinMiner
+  - CrazyEnchantments
+  - Geyser-Spigot
+  - floodgate
+  - MCPets
+commands:
+  matrix:
+    description: Matrix AntiCheat Command
+    usage: /matrix <params>
+  coc:
+    description: ConditionalCommands
+    permission: matrix.ccmd
+permissions:
+  matrix.*:
+    description: Gives access to all Matrix AntiCheat's permissions.
+    children:
+      matrix.command: true
+      matrix.kick: true
+      matrix.bypass: true
+      matrix.notify: true
+      matrix.gui: true
+      matrix.verbose: true
+      matrix.message: true
+      matrix.togglechecks: true
+      matrix.reload: true
+      matrix.npc: true
+      matrix.violations: true
+      matrix.ping: true
+      matrix.cps: true
+      matrix.tempbypass: true
+      matrix.delay: true
+      matrix.fastrelog: true
+      matrix.update: true
+      matrix.status: true
+      matrix.spectate: true
+      matrix.staff: true
+  matrix.bypass:
+    description: Bypass Matrix's checks.
+    default: op
+    children:
+      matrix.bypass.killaura: true
+      matrix.bypass.click: true
+      matrix.bypass.hitbox: true
+      matrix.bypass.move: true
+      matrix.bypass.badpackets: true
+      matrix.bypass.delay: true
+      matrix.bypass.block: true
+      matrix.bypass.scaffold: true
+      matrix.bypass.velocity: true
+      matrix.bypass.chat: true
+      matrix.bypass.interact: true
+      matrix.bypass.phase: true
+      matrix.bypass.autobot: true
+      matrix.bypass.elytra: true
+      matrix.bypass.vehicle: true
+  matrix.command:
+    description: Use /matrix command
+    default: op
+  matrix.npc:
+    description: Use /matrix npc command
+    default: op
+  matrix.kick:
+    description: Kick a player out of game.
+    default: op
+  matrix.notify:
+    description: Send and recieve messages to all staff.
+    default: op
+  matrix.gui:
+    default: op
+    description: Open control GUI
+  matrix.status:
+    default: op
+    description: Check the status of the plugin
+  matrix.update:
+    default: op
+    description: Check for updates
+  matrix.verbose:
+    default: op
+    description: Use the verbose command and seee verbose output
+  matrix.reload:
+    default: op
+    description: Reload the plugin
+  matrix.message:
+    description: Use the warning message command
+    default: op
+  matrix.togglechecks:
+    description: Open checks toggle GUI
+    default: op
+  matrix.violations:
+    description: Open violations GUI
+    default: op
+  matrix.ping:
+    description: Get the player latency value
+    default: op
+  matrix.cps:
+    description: View the click speed of players
+    default: op
+  matrix.tempbypass:
+    description: Use the temp bypass command
+    default: op
+  matrix.delay:
+    description: Use the delay command
+    default: op
+  matrix.spectate:
+    description: Use spectate command
+    default: op
+  matrix.fastrelog:
+    description: Fast relog after get kicked
+    default: op
+  matrix.bypass.killaura:
+    description: Bypass killaura check
+    default: false
+  matrix.bypass.click:
+    description: Bypass click check
+    default: false
+  matrix.bypass.hitbox:
+    description: Bypass hitbox check
+    default: false
+  matrix.bypass.move:
+    description: Bypass move check
+    default: false
+  matrix.bypass.badpackets:
+    description: Bypass bad packets check
+    default: false
+  matrix.bypass.delay:
+    description: Bypass delay check
+    default: false
+  matrix.bypass.block:
+    description: Bypass block check
+    default: false
+  matrix.bypass.scaffold:
+    description: Bypass scaffold check
+    default: false
+  matrix.bypass.jesus:
+    description: Bypass Jesus check
+    default: false
+  matrix.bypass.velocity:
+    description: Bypass velocity check
+    default: false
+  matrix.bypass.chat:
+    description: Bypass chat check
+    default: false
+  matrix.bypass.interact:
+    description: Bypass interact check
+    default: false
+  matrix.bypass.phase:
+    description: Bypass phase check
+    default: false
+  matrix.bypass.elytra:
+    description: Bypass elytra check
+    default: false
+  matrix.bypass.vehicle:
+    description: Bypass vehicle check
+    default: false

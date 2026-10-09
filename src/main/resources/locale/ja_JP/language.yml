@@ -1,0 +1,95 @@
+#### Matrix 設定 - language.yml ##################################################
+#
+#     こんにちは、Matrix アンチチートへようこそ。これは language.yml で、
+#  アンチチートの表示言語を定義するために使用されます。ここでアンチチートが
+#  表示するメッセージを設定できます。
+#
+#  - 問題が発生した場合は、公式 Discord でサポートを受けてください：
+#    https://discord.gg/pEvY55J
+#
+#  Matrix アンチチートをご利用いただきありがとうございます！
+#
+#####################################################################################
+
+# メッセージプレフィックスを定義します
+prefix: '&7[&bMatrix&7]&r '
+
+# プレイヤーがアンチチートによってキックされた後のアナウンスメッセージを定義します
+kick-format: 'プレイヤー %player% が不正行為によりキックされました！'
+
+# 詳細メッセージの形式を定義します
+verbose-format: '&7%player% が &2%check% &7検出に失敗 &8| &7%message%(%tooltips%) &8| &7vl:%vl%&b(+%add_vl%) &7ping:%ping% tps:%tps% component: %component% ver: %version%'
+
+# プレイヤーがキックされた時に Matrix はメッセージをブロードキャストしますか？
+kick-broadcast: true
+
+# プレイヤーがチャットメッセージを速く送信しすぎた時に
+# Matrix が送信するメッセージは？
+spam-warning: 'チャット速度が速すぎるか、同じ内容を繰り返し送信しています！'
+
+# プレイヤーがアンチチートによってキックされた後に
+# 素早く再接続しようとした時のブロックメッセージを定義します
+relog-message: '再ログインするには %time_left% 秒お待ちください！'
+
+# グローバルプレースホルダー。ここで定数を定義し、checks.yml で使用できます
+#
+#  例えば、定義：
+#     kick_help: "誤検知だと思われる場合は、管理者にお問い合わせください"
+#  checks.yml で %gp_kick_help% を使用すると、自動的にこのテキストに置換されます
+#
+global_placeholder: { }
+
+# コンポーネントエイリアスを定義します
+component_alias: {}
+
+# コマンド説明を定義します
+commands:
+  verbose: 'Matrix 詳細メッセージの表示/非表示'
+  notify: '全オンラインスタッフにメッセージを送信'
+  toggle-notify: '通知メッセージ出力の切り替え'
+  npc: 'プレイヤーの背後に KillAura 検出 NPC を生成'
+  kick: 'プレイヤーをキック'
+  msg: 'プレイヤーに警告メッセージを送信'
+  gui: 'コントロールパネルを開く'
+  violations: '違反 GUI を開く'
+  ping: 'プレイヤーの遅延値を取得'
+  cps: 'プレイヤーの CPS データを監視'
+  reload: '設定を再読み込み'
+  lang: '表示言語を切り替え'
+
+gui:
+  main:
+    toggle-checks:
+      name: '&a検出の切り替え'
+      description: '&7クリックして検出 GUI を開く'
+    show-violations:
+      name: '&a違反の表示'
+      description: '&7クリックして違反 GUI を開く'
+    toggle-verbose:
+      name: '&a詳細表示の切り替え'
+      description: '&7クリックして詳細メッセージを有効/無効にする'
+    reload-matrix:
+      name: '&cMatrix の再読み込み'
+      description: '&7クリックしてプラグインを再読み込み'
+    server-status:
+      name: '&bサーバーステータス'
+    support-links:
+      name: '&bサポートリンク'
+    premium-user:
+      name: '&bプレミアムユーザー'
+    close-gui:
+      name: '&cGUI を閉じる'
+
+misc:
+  update:
+    start-checking: 'アップデートを確認中...'
+    updater: '§a> Matrix アップデーター：'
+    has-update: '§cMatrix に新しいアップデートがあります：§f%latest%  §c現在のバージョン：§2%current%'
+    latest: '§aMatrix アンチチートの最新バージョンを使用しています <3'
+    download-link: '§cダウンロードリンク'
+  premium:
+    pass: 'プレミアム版の認証が完了しました！'
+    expire-time: '有効期限：%time%'
+  reload:
+    start-reload: 'Matrix を再読み込み中...'
+    reloaded: 'Matrix の再読み込みが完了しました。'

@@ -1,0 +1,95 @@
+#### Matrix 설정 - language.yml ##################################################
+#
+#     안녕하세요, Matrix 안티치트에 오신 것을 환영합니다. 이것은 language.yml로,
+#  안티치트의 표시 언어를 정의하는 데 사용됩니다. 여기에서 안티치트가
+#  표시하는 메시지를 설정할 수 있습니다.
+#
+#  - 문제가 발생하면 공식 Discord에서 도움을 받으세요:
+#    https://discord.gg/pEvY55J
+#
+#  Matrix 안티치트를 사용해 주셔서 감사합니다!
+#
+#####################################################################################
+
+# 메시지 접두사를 정의합니다
+prefix: '&7[&bMatrix&7]&r '
+
+# 플레이어가 안티치트에 의해 추방된 후의 공지 메시지를 정의합니다
+kick-format: '플레이어 %player% 이(가) 치팅으로 추방되었습니다!'
+
+# 상세 메시지 형식을 정의합니다
+verbose-format: '&7%player% 이(가) &2%check% &7탐지에 실패 &8| &7%message%(%tooltips%) &8| &7vl:%vl%&b(+%add_vl%) &7ping:%ping% tps:%tps% component: %component% ver: %version%'
+
+# 플레이어가 추방될 때 Matrix가 메시지를 브로드캐스트할까요?
+kick-broadcast: true
+
+# Matrix가 플레이어가 채팅 메시지를 너무 빠르게 보내고 있음을
+# 감지했을 때 보내는 메시지
+spam-warning: '너무 빠르게 채팅하거나 같은 내용을 반복 전송할 수 없습니다!'
+
+# 안티치트에 의해 추방된 후 플레이어가 빠르게 재접속하려 할 때
+# Matrix가 차단하며 표시하는 메시지
+relog-message: '다시 로그인하려면 %time_left%초를 기다려 주세요!'
+
+# 전역 플레이스홀더. 여기에서 상수를 정의하고 checks.yml에서 사용할 수 있습니다
+#
+#  예를 들어 정의:
+#     kick_help: "오탐지라고 생각되면 관리자에게 문의하세요"
+#  checks.yml에서 %gp_kick_help%를 사용하면 자동으로 이 텍스트로 대체됩니다
+#
+global_placeholder: { }
+
+# 컴포넌트 별칭을 정의합니다
+component_alias: {}
+
+# 명령어 설명을 정의합니다
+commands:
+  verbose: 'Matrix 상세 메시지 표시/숨기기'
+  notify: '모든 온라인 스태프에게 메시지 전송'
+  toggle-notify: '알림 메시지 출력 전환'
+  npc: '플레이어 뒤에 KillAura 탐지 NPC 생성'
+  kick: '플레이어 추방'
+  msg: '플레이어에게 경고 메시지 전송'
+  gui: '제어판 열기'
+  violations: '위반 GUI 열기'
+  ping: '플레이어 지연 값 확인'
+  cps: '플레이어 CPS 데이터 모니터링'
+  reload: '설정 다시 불러오기'
+  lang: '표시 언어 전환'
+
+gui:
+  main:
+    toggle-checks:
+      name: '&a탐지 전환'
+      description: '&7클릭하여 탐지 GUI 열기'
+    show-violations:
+      name: '&a위반 보기'
+      description: '&7클릭하여 위반 GUI 열기'
+    toggle-verbose:
+      name: '&a상세 출력 전환'
+      description: '&7클릭하여 상세 메시지 활성화/비활성화'
+    reload-matrix:
+      name: '&cMatrix 다시 불러오기'
+      description: '&7클릭하여 플러그인 다시 불러오기'
+    server-status:
+      name: '&b서버 상태'
+    support-links:
+      name: '&b지원 링크'
+    premium-user:
+      name: '&b프리미엄 사용자'
+    close-gui:
+      name: '&cGUI 닫기'
+
+misc:
+  update:
+    start-checking: '업데이트 확인 중...'
+    updater: '§a> Matrix 업데이터:'
+    has-update: '§cMatrix 업데이트가 있습니다: §f%latest%  §c현재 버전: §2%current%'
+    latest: '§aMatrix 안티치트의 최신 버전을 사용하고 있습니다 <3'
+    download-link: '§c다운로드 링크'
+  premium:
+    pass: '프리미엄 버전 인증을 통과했습니다!'
+    expire-time: '만료 시간: %time%'
+  reload:
+    start-reload: 'Matrix를 다시 불러오는 중...'
+    reloaded: 'Matrix 다시 불러오기 완료.'

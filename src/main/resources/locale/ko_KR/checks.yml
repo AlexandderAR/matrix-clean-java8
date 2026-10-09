@@ -1,0 +1,676 @@
+#### Matrix 설정 - checks.yml ####################################################
+#
+#     안녕하세요, Matrix 안티치트에 오신 것을 환영합니다. 이것은 checks.yml로,
+#  각 탐지의 설정과 동작을 정의하는 데 사용됩니다. 여기에서 각 검사의
+#  매개변수를 설정하고, 플레이어의 치팅이 감지된 후 실행할 작업을
+#  정의할 수 있습니다.
+#
+#  주의! 오탐지나 우회가 발생하면 먼저 버그로 보고하는 것을 고려하세요.
+#  설정 파일을 조정하는 것만으로는 오탐지와 우회를 실제로 해결할 수 없습니다!
+#
+#  - "VL"이란?
+#        "VL"은 "Violation Level"(위반 수준)의 약자입니다. 플레이어가
+#    안티치트에 의해 치팅으로 표시되면 위반 수준이 증가합니다.
+#    플레이어의 VL이 아래 "commands" 노드의 값에 도달하면
+#    해당 명령이 실행됩니다.
+#
+#  - 문제가 발생하면 공식 Discord에서 도움을 받으세요:
+#    https://discord.gg/pEvY55J
+#
+#  Matrix 안티치트를 사용해 주셔서 감사합니다!
+#
+#####################################################################################
+
+## KillAura
+# 플레이어의 KillAura/AimBot 핵 사용을 방지합니다
+killaura:
+  # KillAura 탐지를 활성화할까요?
+  enable: true
+
+  # Matrix의 다양한 KillAura 탐지 모듈 목록
+  modules:
+    # 플레이어가 전투에서 비정상적인 행동을 보이는지 검사합니다
+    flaw:
+      type_a:
+        enable: true
+        vl: 3
+      type_b:
+        enable: true
+        vl: 10
+      type_c:
+        enable: true
+        vl: 10
+      type_d:
+        enable: true
+        vl: 10
+      type_e:
+        enable: true
+        vl: 5
+    # 플레이어가 공격 시 올바른 시선 방향을 가지고 있는지 검사합니다
+    rotation:
+      type_a:
+        enable: true
+        vl: 2
+      type_b:
+        enable: true
+        vl: 2
+    # 플레이어가 에임봇과 유사한 조준 특성을 보이는지 검사합니다
+    aimbot:
+      vl_weight: 7
+      cancel_hit: true
+
+      check_aimbot_sync: true
+      check_aimbot_shake: true
+      check_aimbot_snap: true
+      check_aimbot_sensitivity: true
+      check_aimbot_acceleration: true
+      check_aimbot_bad_rotation: true
+
+    crystal:
+      enable: true
+      vl_weight: 5
+      cancel_attack: true
+
+    # KillAura NPC 탐지. 플레이어 뒤에 가짜 플레이어를 생성하여
+    # KillAura 사용을 감지합니다. 걱정하지 마세요, 플레이어는 자신의 NPC만 볼 수 있습니다
+    npc:
+      enable: true
+      vl_weight: 5
+
+      # NPC의 위치 계산을 비동기적으로 실행할까요? (리소스를 소모할 수 있음)
+      async: true
+
+      # NPC가 무작위 생성 대신 실제 엔티티 ID를 사용할까요?
+      # 일부 치트 클라이언트는 무작위 엔티티 ID를 우회할 수 있습니다
+      real_entity_id: true
+
+      # NPC가 플레이어가 다른 플레이어를 공격할 때만 생성될까요?
+      # true로 설정하면 플레이어가 다른 플레이어를 공격할 때만 NPC가 생성됩니다
+      spawn_on_attack_player: true
+
+      # NPC가 명령으로만 생성될까요? false로 설정하면 전투 시 자동으로
+      # NPC가 생성됩니다. true로 설정하면 "matrix npc" 명령으로만
+      # NPC를 생성할 수 있습니다. (기본값: true)
+      only_command_trigger: true
+
+      # 플레이어가 이 NPC를 볼 수 있어야 할까요? (true = 보임)
+      visible: true
+
+      # 무작위 이름 강제 사용 (기본값: false)
+      # 이 옵션을 활성화하면 Matrix가 생성하는 NPC는 온라인 플레이어 이름 대신
+      # 강제로 무작위 이름을 사용합니다. 이는 일부 클라이언트가 "중복" 이름
+      # NPC를 우회하는 문제를 해결할 수 있습니다. 단, Matrix는 무작위 이름의
+      # NPC에 팀을 적용하지 않으므로 API를 사용하여 직접 설정해야 할 수 있습니다.
+      # 그렇지 않으면 일부 클라이언트가 NPC 이름의 색상 유무로 우회합니다
+      force_random_name: false
+
+      # NPC 존재 시간 설정 (틱)
+      check_ticks:
+        base: 100
+        attack_add: 20
+        hit_bot_add: 50
+
+      # NPC 움직임 설정
+      movement:
+        distance_base: 3.2
+        distance_random_size: 0.75
+        distance_attack_base: 3.0
+        move_up_after_attack: false
+        max_speed: 0.5
+
+    # 크리티컬 히트 탐지. 비정상적인 크리티컬 공격을 방지합니다
+    critical:
+      # 이 모듈을 활성화할까요?
+      enable: true
+
+      # 이 모듈에 의해 감지되면 플레이어가 받는 VL은?
+      vl_weight: 5
+
+      # 치팅 감지 후 플레이어의 공격을 취소할까요?
+      cancel_attack: true
+
+    # 스트레이프 탐지
+    strafe:
+      enable: true
+      vl_weight: 3
+      cancel_move: true
+
+    # 조합 탐지
+    combine:
+      aimbot_with_reach:
+        time: 5000
+        condition:
+          - 'ka.abt.magic'
+          - 'hb.reach'
+          - 'hb.reach'
+        action: 5 # +5 VL
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix npc %player% 100'
+    20: 'matrix notify %player% 이(가) 전투 핵을 사용하고 있을 수 있습니다 (KillAura)'
+    35: 'matrix notify %player% 이(가) 전투 핵을 사용하고 있습니다 (KillAura) #2'
+    45: 'matrix delay 5 matrix kick %player% KillAura'
+
+## HitBox
+# 플레이어의 HitBox, Angle, Reach 핵 사용을 방지합니다
+hitbox:
+  # HitBox 탐지를 활성화할까요?
+  enable: true
+
+  # 최대 공격 거리 (기본값: 3.15)
+  max_reach: 3.15
+
+  # 히트박스 계산 시 트레이스백 틱 길이
+  trace_back_length: 8
+
+  # Matrix가 대상을 정확하게 추적할까요? (기본값: false)
+  # 주의: 이 옵션은 대역폭 사용량을 증가시킬 수 있습니다
+  strict_mode: true
+
+  # Matrix가 레이캐스트를 검사할까요? (엄격 모드 필요)
+  raycast: false
+
+  # 치팅 감지 후 Matrix가 플레이어의 공격을 취소할까요?
+  # 선택 옵션:
+  #  1. none   - 아무것도 하지 않음
+  #  2. silent - 데미지를 0으로 설정 (권장)
+  #  3. cancel - 공격 취소
+  cancel_way: cancel
+
+  # 불법 공격을 취소하는 데 필요한 위반 횟수
+  cancel_vl: 5
+
+  # 위반 가중치
+  vl_weights:
+    miss_player_hitbox: 2
+    reach_target_standing: 10
+    reach_target_moving: 3
+
+  # 동적 VL 가중치를 활성화할까요?
+  # 활성화하면 VL 가중치가 플레이어의 공격 거리에 따라 계산됩니다
+  # 예: 3.2 거리 사용 시 1vl, 5.0 거리 사용 시 19vl
+  # 이 기능을 활성화하면 "reach_target_standing"과 "reach_target_moving"은 더 이상 적용되지 않습니다
+  # 참고: 동적 VL = (현재_거리 - 최대_거리) * 확장_계수
+  dynamic_vl:
+    enable: true
+    expander: 10
+    min_vl: 3
+    max_vl: 8
+
+  # 짧은 시간 내 VL의 최대 증가량은?
+  # 네트워크 연결의 불안정성으로 인해 렉 스파이크 시 HitBox 탐지가 오탐지를 발생시킬 수 있습니다
+  # 이 옵션은 "5초" 내 VL의 최대 증가량을 제한합니다
+  max_burst_vl: 15
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 최대 공격 거리를 초과하여 엔티티를 공격하려 했습니다 (HitBox)'
+    12: 'matrix npc %player% 120'
+    15: 'matrix notify %player% 이(가) 최대 공격 거리를 초과하여 엔티티를 공격하려 했습니다 (HitBox) #2'
+    24: 'matrix kick %player% Reach/HitBox 핵'
+
+## Click (클릭 탐지)
+# 플레이어의 과도한 클릭 속도나 오토클리커 사용을 방지합니다
+click:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 플레이어의 최대 CPS는? 이 CPS를 초과하면 감지됩니다
+  max_cps: 15
+
+  # 모듈
+  check_cps: true
+  check_swing: true
+  check_timing: true
+
+  # CPS가 너무 높을 때 CPS에 따라 VL 가중치를 동적으로 조정할까요?
+  # 플레이어의 CPS가 높을수록 치팅 감지 시 받는 VL이 높아집니다
+  dynamic_cps_vl_weight: true
+
+  # 클릭 간격 버퍼 크기 (수정하지 마세요!!!)
+  buffer_size: 20
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 비정상적으로 클릭하려 했습니다 (Click) #1'
+    18: 'matrix notify %player% 이(가) 비정상적으로 클릭하려 했습니다 (Click) #2'
+    30: 'matrix kick %player% 비정상적인 클릭'
+
+## Move (이동 속도 탐지)
+# 플레이어의 비정상적인 이동을 방지합니다
+move:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # Matrix가 NoSlow 치팅을 차단할까요?
+  check_noslow: true
+
+  # Matrix가 그라운드 스푸핑/노폴 치트를 감지할까요?
+  check_nofall: true
+
+  # 플레이어가 이 VL에 도달하면 비정상적인 이동을 되돌리기 시작합니다
+  cancel_vl: 35
+
+  # 플레이어가 되돌려질 때 Matrix가 데미지를 줄까요?
+  apply_damage: true
+
+  # Matrix가 취소된 블록 위에 플레이어가 서는 것을 허용할까요?
+  # 활성화하지 않는 것을 권장합니다. 성능에 약간 영향을 미치고 우회를 유발할 수 있습니다
+  # https://www.youtube.com/watch?v=9lNXNW6Phk0&t=133s
+  allow_bpe_bridge: false
+
+  # Matrix가 비행 능력을 가진 플레이어의 속도를 검사할까요?
+  # 일부 "PvP 클라이언트"의 비행 기능이 제한될 수 있습니다
+  check_flying_players: false
+
+  # 플레이어가 이동 중 인벤토리를 사용하는지 검사합니다
+  check_inventory_move: true
+
+  # 플레이어가 보이드에서 치팅하면 Matrix가 플레이어를 보이드로 텔레포트할까요?
+  allow_setback_to_void: true
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 10
+    amount: 45
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    55: 'matrix notify %player% 이(가) 비정상적으로 이동하려 했습니다 (Move) #1'
+    90: 'matrix notify %player% 이(가) 비정상적으로 이동하려 했습니다 (Move) #2'
+    320: 'matrix kick %player% 비정상적인 이동'
+
+## BadPackets (비정상 패킷)
+# 플레이어가 과도한 이동 패킷이나 불법 패킷을 보내는 것을 방지합니다
+badpackets:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # Matrix가 플레이어의 공중 블록 배치를 차단할까요?
+  # 플레이어는 다른 블록에 인접해야 블록을 배치할 수 있으며, 그렇지 않으면 감지됩니다
+  # Litematica 같은 설계도 모드에는 이 기능이 있으므로
+  # 설계도 모드 사용을 허용하는 경우 비활성화할 수 있습니다
+  check_air_place: true
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 25
+
+  # 플레이어가 이 VL에 도달하면 타이머 되돌리기를 시작합니다
+  cancel_vl: 3
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    100: 'matrix notify %player% 이(가) 서버에 비정상적인 패킷을 보내고 있습니다 (BadPackets) #1'
+    150: 'matrix notify %player% 이(가) 서버에 비정상적인 패킷을 보내고 있습니다 (BadPackets) #2'
+    240: 'matrix kick %player% 비정상적인 패킷 전송'
+
+## Delay (딜레이 탐지)
+# 플레이어가 음식 섭취나 치유 등 특정 행동을 가속하는 것을 방지합니다
+delay:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 치팅 감지 시 Matrix가 플레이어의 행동을 차단할까요?
+  cancel_action: true
+
+  # 모듈 목록
+  # 각 모듈의 VL 가중치를 정의할 수 있습니다. -1은 비활성화
+  check_healing: 1
+  check_using_items: 1
+  check_using_bow: 1
+  check_auto_splash: 2
+  check_inventory_action: 1
+  check_auto_totem: 1
+  check_auto_crossbow: 1
+  check_fast_throw: 1
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 2
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    3: 'matrix notify %player% 이(가) 행동을 가속하려 하고 있습니다 (Delay) #1'
+    5: 'matrix notify %player% 이(가) 행동을 가속하려 하고 있습니다 (Delay) #2'
+    10: 'matrix kick %player% 행동 가속'
+
+## Block (블록 탐지)
+# 플레이어가 블록을 빠르게 파괴하거나 배치하는 것을 방지합니다
+block:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 불법 파괴/배치를 취소하는 데 필요한 위반 횟수 (-1 = 취소 안 함)
+  cancel_vl: 5
+
+  # 모듈 목록
+  # 여기에서 일부 모듈을 비활성화할 수 있습니다
+  modules:
+    # 플레이어가 블록을 빠르게 파괴하는 것을 감지합니다
+    fastbreak:
+      enable: true
+      vl_weight: 4
+    # 플레이어가 블록을 빠르게 배치하는 것을 감지합니다
+    fastplace:
+      enable: true
+      vl_weight: 1
+      max_place_per_second: 9
+    # 플레이어가 손을 흔들지 않고 블록을 배치하는 것을 감지합니다
+    noswing:
+      enable: true
+      vl_weight: 1
+    # 플레이어가 파괴 중단 패킷을 보내지 않는 것을 감지합니다
+    abort:
+      enable: true
+      vl_weight: 0
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 8
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 블록을 너무 빠르게 배치/파괴하려 했습니다 (FastPlace/FastBreak)'
+    20: 'matrix kick %player% FastPlace/FastBreak 핵'
+
+## Scaffold (스캐폴드 탐지)
+# 플레이어가 정상보다 빠르게 브릿지하거나 타워링하는 것을 방지합니다
+scaffold:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 취소 VL
+  cancel_vl: 15
+
+  # 모듈
+  modules:
+    # 플레이어가 빠르게 브릿지하는 것을 감지합니다
+    place:
+      enable: true
+      vl_weight: 7
+      check_jump: true
+
+    # 플레이어의 너무 빠른 브릿지를 방지합니다
+    delay:
+      enable: true
+      vl_weight: 5
+      cancel_place: true
+      min_delay: 6
+      min_delay_diagonal: 3
+
+    # 너무 빠른 우클릭을 방지합니다
+    right_cps:
+      enable: true
+      vl_weight: 5
+      max_cps: 29
+
+    # 플레이어가 빠르게 타워링하는 것을 감지합니다
+    tower:
+      enable: true
+      vl_weight: 2
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 6
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 빠르게 블록을 브릿지하려 했습니다 (Scaffold)'
+    15: 'matrix notify %player% 이(가) 빠르게 블록을 브릿지하려 했습니다 (Scaffold) #2'
+    24: 'matrix kick %player% Scaffold/Tower'
+
+## Jesus (수면 위 이동 탐지)
+# 플레이어가 액체에서 너무 빠르게 이동하거나 액체 위를 걷는 것을 방지합니다
+jesus:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 불법 이동을 취소하는 데 필요한 위반 횟수 (-1 = 취소 안 함)
+  cancel_vl: 15
+
+  # Matrix가 플레이어의 수영 상태를 무시할까요?
+  # 이 기능은 수영 상태 비동기를 방지할 수 있습니다
+  ignore_swim_pose: false
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 10
+    amount: 10
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    20: 'matrix notify %player% 이(가) 액체에서 불법으로 이동하려 했습니다 (Jesus)'
+    40: 'matrix notify %player% 이(가) 액체에서 불법으로 이동하려 했습니다 (Jesus) #2'
+    50: 'matrix kick %player% Jesus/WaterSpeed/WaterFly 핵'
+
+## Velocity (넉백 탐지)
+# 안티 넉백 핵 사용을 방지합니다
+velocity:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 플레이어가 벨로시티에 응답하기를 기다리는 시간 (틱)
+  # 이 시간 후에도 플레이어가 응답하지 않으면 감지됩니다
+  wait_time: 20
+
+  # 랙 플레이어 무시. 이 기능은 랙이 걸리거나
+  # 리소스 팩을 변경 중인 플레이어를 무시할 수 있습니다
+  ignore_lag: true
+
+  # 벨로시티 탐지 모듈의 VL 가중치 (-1 = 비활성화)
+  modules:
+    respond: 5
+    vertical: 1
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 3
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 서버 벨로시티를 무시하려 했습니다 (Velocity)'
+    15: 'matrix notify %player% 이(가) 서버 벨로시티를 무시하려 했습니다 (Velocity) #2'
+    20: 'matrix kick %player% Velocity/안티 넉백'
+
+## Spam (채팅 스팸 탐지)
+# 플레이어의 서버 채팅 스팸을 방지합니다
+chat:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 메시지 간 최소 시간 (초)
+  min_time: 3
+
+  # 메시지 전송을 취소하는 데 필요한 위반 횟수 (-1 = 취소 안 함)
+  cancel_vl: 3
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 30
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    4: 'matrix notify %player% 이(가) 채팅을 스팸하고 있습니다 (ChatSpam)'
+    10: 'matrix kick %player% 채팅 스팸을 멈추세요!'
+
+## Interact (상호작용 탐지)
+# 플레이어의 엔티티 및 블록과의 불법 상호작용을 방지합니다
+interact:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 어떤 버전의 상호작용 탐지를 사용할까요?
+  # v1 = 이전 버전
+  # v2 = 새 버전 (1.8/1.12/1.19+만 지원)
+  mode: "v1"
+
+  # Matrix가 비정상적인 플레이어 상호작용을 더 엄격하게 방지할까요? (기본값: false)
+  # 오탐지가 발생할 수 있지만 더 많은 핵을 방지할 수 있습니다
+  strict: false
+
+  check_interact_block: true
+  check_attack: true
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 10
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 엔티티/블록과 불법으로 상호작용하려 했습니다 (Interact)'
+    15: 'matrix kick %player% 블록/엔티티와의 불법 상호작용'
+
+## Phase (페이즈 탐지)
+# 플레이어가 블록을 통과하는 것을 방지합니다
+phase:
+  # 이 탐지를 활성화할까요?
+  enable: false
+
+  # 플레이어가 자주 블록을 통과하려 할 때 Matrix가 이동을
+  # 방지하는 시간은? (밀리초)
+  freeze_time: 400
+
+  # 불법 이동을 취소하는 데 필요한 위반 횟수
+  cancel_vl: 5
+
+  # 제외할 블록 유형
+  exclude_types: []
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 10
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    7: 'matrix notify %player% 이(가) 블록을 통과하고 있습니다 (Phase)'
+    13: 'matrix notify %player% 이(가) 블록을 통과하고 있습니다 (Phase) #2'
+
+## AutoBot (자동 봇 탐지)
+# Baritone 등 봇 모드 사용을 방지합니다
+# 참고: 이 탐지는 프리미엄 사용자에게만 작동합니다
+autobot:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 2
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    5: 'matrix notify %player% 이(가) 자동 봇 사용이 의심됩니다 (AutoBot)'
+    10: 'matrix notify %player% 이(가) 자동 봇 사용이 의심됩니다 (AutoBot) #2'
+    15: 'matrix kick %player% 자동 봇'
+
+## Elytra (엘리트라 탐지)
+# Elytra+, ElytraFlight 등의 사용을 방지합니다
+# 1.9+ 에서만 작동합니다
+elytra:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # Matrix가 심하게 치팅하는 플레이어를 강제로 되돌릴까요?
+  # cancel_vl에 도달하지 않았더라도 (기본값: true)
+  force_setback: true
+
+  # 되돌리기 위반 수준 (-1 = 되돌리지 않음)
+  setback_vl: 5
+
+  # 엘리트라 해제 VL
+  # 플레이어가 이 VL에 도달하면 Matrix가 활공 상태를 해제합니다 (-1 = 기능 비활성화)
+  unequip_vl: 20
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 7
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    10: 'matrix notify %player% 이(가) 엘리트라 비행 사용이 의심됩니다 (Elytra)'
+    20: 'matrix notify %player% 이(가) 엘리트라 비행 사용이 의심됩니다 (Elytra) #2'
+    40: 'matrix kick %player% 엘리트라 비행'
+
+## Vehicle (탈것 탐지)
+# VehicleFlight, VehicleSpeed, EntitySpeed 등의 사용을 방지합니다
+# 1.9+ 에서만 작동합니다
+vehicle:
+  # 이 탐지를 활성화할까요?
+  enable: true
+
+  # 특정 생물을 탈것으로 사용하는 것을 방지합니다
+  # 모든 엔티티 유형: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  deny_entity_types_as_vehicle:
+    - 'LLAMA'
+
+  # 탈것 속도 / 엔티티 속도
+  speed:
+    # 이 모듈을 활성화할까요?
+    enable: true
+
+    # 되돌리기 VL (-1 = 되돌리기 비활성화)
+    setback_vl: 2
+
+  # 탈것 비행 / 보트 비행
+  flight:
+    # 이 모듈을 활성화할까요?
+    enable: true
+
+    # 되돌리기 VL (-1 = 되돌리지 않음)
+    setback_vl: 4
+
+    # 탈것 하차 VL (-1 = 하차시키지 않음)
+    leave_vehicle: 10
+
+  # 사용자 정의 VL 감소 간격(초) 및 감소 단계 크기
+  decay:
+    interval: 15
+    amount: 5
+
+  # 위반 임계값
+  # 위반_횟수: '<명령>'
+  commands:
+    5: 'matrix notify %player% 이(가) 탈것 치트 사용이 의심됩니다 (Vehicle)'
+    10: 'matrix notify %player% 이(가) 탈것 치트 사용이 의심됩니다 (Vehicle) #2'
+    17: 'matrix kick %player% 의심스러운 탈것 이동'

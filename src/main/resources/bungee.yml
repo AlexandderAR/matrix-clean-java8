@@ -1,0 +1,6 @@
+name: MatrixBungee
+version: 1.0
+author: RE
+main: me.rerere.matrix.proxy.bungee.MatrixBungee
+depends: [ Geyser-BungeeCord ]
+softdepends: [ floodgate ]

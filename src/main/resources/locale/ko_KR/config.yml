@@ -1,0 +1,109 @@
+#### Matrix 설정 - config.yml ####################################################
+#
+#     안녕하세요, Matrix 안티치트에 오신 것을 환영합니다. 이것은 config.yml로,
+#  Matrix의 전역 설정을 정의하는 데 사용됩니다.
+#
+#  - 문제가 발생하면 공식 Discord에서 도움을 받으세요:
+#    https://discord.gg/pEvY55J
+#
+#  유용한 링크:
+#    Website: https://matrix.rip
+#    Discord: https://discord.gg/pEvY55J
+#    Wiki: https://wiki.matrix.rip
+#    Issue Tracker: https://github.com/jiangdashao/Matrix-Issues/issues
+#
+#  Matrix 안티치트를 사용해 주셔서 감사합니다!
+#
+#####################################################################################
+
+# 오프라인 플랜 모드
+# 활성화하면 Matrix는 모든 라이선스 확인 요청을 건너뛰고
+# 라이선스 서버에 연결하지 않고 Enterprise 플랜의 모든 기능으로 작동합니다.
+offline-plan: true
+
+# 시작 시 업데이트를 확인할까요?
+check_update: true
+
+# 여기에 액세스 토큰을 입력하세요. https://localhost/offline 에서 얻을 수 있습니다 (Client - Token)
+# 액세스 토큰을 다른 사람과 공유하지 마세요!
+# PluginCloud에서 플러그인을 다운로드한 경우 수동으로 입력할 필요 없습니다
+# access_token: ''
+
+# 권한 캐시 갱신 간격 (단위: 초, 기본값: 15)
+permission_refresh_interval: 15
+
+# BungeeCord GeyserMC 지원을 활성화할까요?
+# Matrix는 GeyserMC를 실행하는 두 가지 방법을 지원합니다:
+#   1. Spigot 모드: Spigot에 GeyserMC/FloodGate를 설치하면 이 설정을 수정할 필요 없이 Matrix가 자동으로 지원합니다
+#   2. Bungee 모드: GeyserMC가 BungeeCord에 설치된 경우 이 옵션을 활성화하고 BungeeCord에도 Matrix를 설치해야 합니다
+# !!!    BungeeCord에 GeyserMC를 설치하지 않았다면 이 옵션을 활성화하지 마세요
+bungee_geysermc_support: false
+
+# /matrix kick으로 추방할 때 번개 시각 효과를 표시할까요?
+kick_strike_lightning: true
+
+# Discord Webhook
+discord_webhook:
+  # Discord Webhook 활성화
+  enable: false
+
+  # Webhook URL
+  url: ''
+
+# 서버 렉 보호
+# 서버가 렉일 때 일부 탐지를 자동으로 비활성화합니다.
+# 이는 대부분의(전부는 아닌) 오탐지를 방지합니다.
+tps_protection:
+  # 이 기능을 활성화할까요?
+  enable: true
+
+  # 보호를 트리거하는 데 필요한 최소 TPS
+  min_tps: 17.0
+
+  # 렉 스파이크 임계값 (밀리초)
+  # 서버가 일정 시간 동안 응답하지 않으면 탐지를 비활성화합니다
+  lag_threshold: 1000
+
+# 위반 기록 (기본값: true)
+# 모든 위반을 파일에 기록합니다. 파일은 /plugins/Matrix/logs에 있습니다
+# 경고: BungeeCord를 사용하는 경우 FALSE로 설정하는 것을 권장합니다.
+# 이렇게 하면 불필요한 로그 파일이 저장되어 디스크 공간을 차지하는 것을 방지합니다.
+log_file: true
+
+# 오래된 로그 파일 삭제 (일)
+# 로그 파일이 지정된 일수 이상 저장되면 삭제됩니다
+# -1로 설정하면 이 기능을 비활성화합니다
+delete_time: 30
+
+# 우회 권한 거부 (기본값: false)
+# TRUE로 설정하면 Matrix가 서버의 모든 사람을 강제로 검사합니다.
+# OP 상태를 가진 플레이어도 포함됩니다. TRUE로 설정하면
+# OP 상태를 제거하지 않고도 필요한 테스트를 실행할 수 있습니다.
+disable_bypass_permission: false
+
+## 재접속 대기 시간
+# 추방 후 플레이어가 다시 로그인할 수 있을 때까지의 시간 (초)
+# -1로 설정하면 이 기능을 비활성화합니다
+relog_time: 5
+
+# 체력 표시 방지
+# 활성화하면 Matrix가 클라이언트에 전송되는 플레이어 체력 값을 수정하여
+# 플레이어가 모드를 사용하여 다른 플레이어의 체력을 보는 것을 방지합니다.
+anti-health-indicator: true
+
+# 핑 난독화
+# 활성화하면 Matrix가 플레이어의 핑(탭 목록에서만)을 0으로 설정합니다.
+# 이는 일부 치트 클라이언트의 안티봇 기능을 혼란시키고
+# 모든 플레이어를 봇으로 취급하게 할 수 있습니다.
+ping-obfuscation: true
+
+# 비활성화된 컴포넌트
+# 전체 탐지를 비활성화하는 대신 여기에서 특정 하위 검사를 비활성화할 수 있습니다.
+# 컴포넌트 이름은 verbose 메시지 끝에서 확인할 수 있습니다.
+# 예: "speed.web"을 추가하면 빠른 거미줄 검사가 비활성화됩니다
+disabled_components:
+  - 'example entry'
+
+# 사용자 정의 VL 가중치 (형식: 컴포넌트: 새 VL 가중치)
+custom_vl_weight:
+  - 'example_component:5'

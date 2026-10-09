@@ -1,0 +1,92 @@
+#### Matrix 配置 - language.yml ##################################################
+#
+#     你好，欢迎使用 Matrix 反作弊，这是 language.yml，
+#  用于定义反作弊的显示语言。你可以在此设置反作弊显示的各种消息。
+#
+#  - 如果遇到任何问题，请前往官方 Discord 获取帮助：
+#    https://discord.gg/pEvY55J
+#
+#  再次感谢你使用 Matrix 反作弊！
+#
+#####################################################################################
+
+# 在此定义消息前缀
+prefix: '&7[&bMatrix&7]&r '
+
+# 定义玩家被反作弊踢出后的公告消息
+kick-format: '玩家 %player% 因作弊被踢出！'
+
+# 定义详细消息格式
+verbose-format: '&7%player% 触发 &2%check% &7检测 &8| &7%message%(%tooltips%) &8| &7vl:%vl%&b(+%add_vl%) &7ping:%ping% tps:%tps% component: %component% ver: %version%'
+
+# 玩家被踢出时 Matrix 是否广播消息？
+kick-broadcast: true
+
+# 当 Matrix 检测到玩家发送聊天消息过快时向玩家发送的消息
+spam-warning: '你发送消息过快或重复发送了相同内容！'
+
+# 定义玩家被反作弊踢出后尝试快速重新连接时的阻止消息
+relog-message: '请等待 %time_left% 秒后再重新登录！'
+
+# 全局占位符，你可以在此定义常量并在 checks.yml 中使用
+#
+#  例如定义：
+#     kick_help: "如果你认为这是误判，请联系管理员处理"
+#  然后你可以在 checks.yml 中使用 %gp_kick_help%，它会自动替换为此文本
+#
+global_placeholder: { }
+
+# 定义组件别名
+component_alias: {}
+
+# 定义命令描述
+commands:
+  verbose: '显示/隐藏 Matrix 详细消息'
+  notify: '向所有在线管理员发送消息'
+  toggle-notify: '切换通知消息输出'
+  npc: '在玩家身后生成 KillAura 检测 NPC'
+  kick: '踢出玩家'
+  msg: '向玩家发送警告消息'
+  gui: '打开控制面板'
+  violations: '打开违规 GUI'
+  ping: '获取玩家延迟值'
+  cps: '监控玩家 CPS 数据'
+  reload: '重载配置'
+  lang: '切换显示语言'
+
+gui:
+  main:
+    toggle-checks:
+      name: '&a切换检测'
+      description: '&7点击打开检测 GUI'
+    show-violations:
+      name: '&a查看违规'
+      description: '&7点击打开违规 GUI'
+    toggle-verbose:
+      name: '&a切换详细输出'
+      description: '&7点击启用/禁用详细消息'
+    reload-matrix:
+      name: '&c重载 Matrix'
+      description: '&7点击重载插件'
+    server-status:
+      name: '&b服务器状态'
+    support-links:
+      name: '&b支持链接'
+    premium-user:
+      name: '&b高级用户'
+    close-gui:
+      name: '&c关闭 GUI'
+
+misc:
+  update:
+    start-checking: '开始检查更新...'
+    updater: '§a> Matrix 更新器：'
+    has-update: '§cMatrix 有新版本可用：§f%latest%  §c当前版本：§2%current%'
+    latest: '§a你正在使用最新版本的 Matrix 反作弊 <3'
+    download-link: '§c下载链接'
+  premium:
+    pass: '高级版验证通过！'
+    expire-time: '到期时间：%time%'
+  reload:
+    start-reload: '正在重载 Matrix...'
+    reloaded: 'Matrix 已重载。'

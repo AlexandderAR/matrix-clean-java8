@@ -1,0 +1,106 @@
+#### Matrix 配置 - config.yml ####################################################
+#
+#     你好，欢迎使用 Matrix 反作弊，这是 config.yml，用于定义 Matrix 的全局设置。
+#
+#  - 如果遇到任何问题，请前往官方 Discord 获取帮助：
+#    https://discord.gg/pEvY55J
+#
+#  常用链接：
+#    Website: https://matrix.rip
+#    Discord: https://discord.gg/pEvY55J
+#    Wiki: https://wiki.matrix.rip
+#    Issue Tracker: https://github.com/jiangdashao/Matrix-Issues/issues
+#
+#  再次感谢你使用 Matrix 反作弊！
+#
+#####################################################################################
+
+# 离线计划模式
+# 启用后，Matrix 将跳过所有许可证验证请求，
+# 无需联系许可证服务器即可使用完整的 Enterprise 计划功能。
+offline-plan: true
+
+# 启动时是否检查更新？
+check_update: true
+
+# 在此填写访问令牌，你可以在 https://localhost/offline 获取（Client - Token）
+# 请不要将你的访问令牌分享给任何人！
+# 如果你从 PluginCloud 下载插件，则不需要手动填写
+# access_token: ''
+
+# 权限缓存刷新间隔（单位：秒，默认：15）
+permission_refresh_interval: 15
+
+# 是否启用 BungeeCord GeyserMC 支持？
+# Matrix 支持两种方式运行 GeyserMC：
+#   1. Spigot 模式：在 Spigot 安装 GeyserMC/FloodGate，无需修改此设置，Matrix 会自动支持
+#   2. Bungee 模式：当 GeyserMC 安装在 BungeeCord 时，需要启用此选项并在 BungeeCord 安装 Matrix
+# !!!    如果你没有在 BungeeCord 安装 GeyserMC，请勿启用此选项
+bungee_geysermc_support: false
+
+# 使用 /matrix kick 踢出玩家时是否产生闪电视觉效果？
+kick_strike_lightning: true
+
+# Discord Webhook
+discord_webhook:
+  # 是否启用 Discord Webhook
+  enable: false
+
+  # Webhook 地址
+  url: ''
+
+# 服务器卡顿保护
+# 当服务器卡顿时自动禁用部分检测，可以防止大部分（但非全部）误判
+tps_protection:
+  # 是否启用此功能？
+  enable: true
+
+  # 触发保护所需的最低 TPS
+  min_tps: 17.0
+
+  # 卡顿峰值阈值（毫秒）
+  # 如果服务器在一定时间内未响应，将关闭相关检测
+  lag_threshold: 1000
+
+# 记录违规日志（默认：true）
+# 将所有违规记录到文件，文件位于 /plugins/Matrix/logs
+# 警告：如果你使用 BungeeCord，建议设置为 FALSE
+# 这可以避免生成无用的日志文件占用宝贵的磁盘空间
+log_file: true
+
+# 删除过期日志文件（天）
+# 当日志文件存储超过指定天数时将被删除
+# 设置为 -1 可禁用此功能
+delete_time: 30
+
+# 禁止绕过权限（默认：false）
+# 设为 TRUE 后 Matrix 将强制检测服务器上的所有人
+# 包括拥有管理员权限的玩家。设为 TRUE 后你可以在
+# 不移除管理员权限的情况下进行测试
+disable_bypass_permission: false
+
+## 重新登录等待时间
+# 玩家被踢出后多久允许重新登录（秒）
+# 设置为 -1 可禁用此功能
+relog_time: 5
+
+# 反血量显示
+# 启用后 Matrix 将修改发送给客户端的玩家血量值
+# 防止玩家使用 Mod 查看其他玩家的血量
+anti-health-indicator: true
+
+# 混淆 ping
+# 启用后 Matrix 将把玩家的 ping（仅 TAB 列表中）设为 0
+# 这可以干扰部分作弊客户端的反机器人功能，使其将所有玩家视为机器人
+ping-obfuscation: true
+
+# 禁用组件
+# 你可以在此禁用特定的子检测，而无需禁用整个检测项
+# 组件名称可在 verbose 消息末尾找到
+# 示例：添加 "speed.web" 可禁用快速蜘蛛网检测
+disabled_components:
+  - 'example entry'
+
+# 自定义 VL 权重（格式：组件名:新 VL 权重）
+custom_vl_weight:
+  - 'example_component:5'

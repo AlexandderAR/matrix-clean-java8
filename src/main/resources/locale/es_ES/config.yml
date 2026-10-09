@@ -1,0 +1,109 @@
+#### Matrix Configuracion - config.yml ##############################################
+#
+#     Hola, bienvenido a Matrix anti-cheat. Este es config.yml, utilizado para
+#  definir la configuracion global de Matrix.
+#
+#  - Si tienes problemas, visita nuestro Discord oficial:
+#    https://discord.gg/pEvY55J
+#
+#  Enlaces utiles:
+#    Website: https://matrix.rip
+#    Discord: https://discord.gg/pEvY55J
+#    Wiki: https://wiki.matrix.rip
+#    Issue Tracker: https://github.com/jiangdashao/Matrix-Issues/issues
+#
+#  Gracias por usar Matrix anti-cheat!
+#
+#####################################################################################
+
+# Modo de plan offline
+# Cuando esta activado, Matrix omite todas las solicitudes de verificacion de licencia
+# y funciona con el plan Enterprise completo sin contactar al servidor de licencias.
+offline-plan: true
+
+# Matrix debe verificar actualizaciones al iniciar?
+check_update: true
+
+# Coloca tu token de acceso aqui. Puedes obtenerlo en https://localhost/offline (Client - Token)
+# NO compartas tu token de acceso con nadie!
+# Si descargaste el plugin desde PluginCloud, no necesitas rellenarlo manualmente
+# access_token: ''
+
+# Intervalo de actualizacion de cache de permisos (unidad: segundos, predeterminado: 15)
+permission_refresh_interval: 15
+
+# Activar soporte de BungeeCord GeyserMC?
+# Matrix soporta dos formas de ejecutar GeyserMC:
+#   1. Modo Spigot: Instala GeyserMC/FloodGate en Spigot, no necesitas modificar esta configuracion, Matrix lo soportara automaticamente
+#   2. Modo Bungee: Cuando GeyserMC esta instalado en BungeeCord, necesitas activar esta opcion y tambien instalar Matrix en BungeeCord
+# !!!    NO actives esta opcion si NO has instalado GeyserMC en BungeeCord
+bungee_geysermc_support: false
+
+# Debe haber un efecto visual de rayo cuando alguien es expulsado usando /matrix kick?
+kick_strike_lightning: true
+
+# Discord Webhook
+discord_webhook:
+  # Activar Discord Webhook
+  enable: false
+
+  # URL del Webhook
+  url: ''
+
+# Proteccion contra lag del servidor
+# Desactiva automaticamente algunas detecciones cuando el servidor esta con lag.
+# Esto previene la mayoria, pero no todos, los falsos positivos.
+tps_protection:
+  # Activar esta funcion?
+  enable: true
+
+  # TPS minimo necesario para activar la proteccion
+  min_tps: 17.0
+
+  # Umbral de pico de lag (milisegundos)
+  # Si el servidor no responde durante un periodo de tiempo, se desactivaran las detecciones
+  lag_threshold: 1000
+
+# Registrar violaciones (predeterminado: true)
+# Registra todas las violaciones en un archivo. Los archivos se encuentran en /plugins/Matrix/logs
+# Advertencia: Si usas BungeeCord, se recomienda establecer esto en FALSE.
+# Esto evitara que se almacenen archivos de registro inutiles y ocupen espacio en disco.
+log_file: true
+
+# Eliminar archivos de registro obsoletos (dias)
+# Si el archivo de registro ha sido almacenado por mas de los dias especificados, sera eliminado
+# Establece -1 para desactivar esta funcion
+delete_time: 30
+
+# Denegar permiso de bypass (predeterminado: false)
+# Al establecer TRUE, Matrix verificara a todos en el servidor,
+# INCLUYENDO a cualquiera con estado de Operador. Asi puedes ejecutar
+# las pruebas necesarias sin remover tu estado de operador.
+disable_bypass_permission: false
+
+## Tiempo de reconexion
+# Cuanto tiempo despues de ser expulsado puede el jugador volver a conectarse? (segundos)
+# Establece -1 para desactivar esta funcion
+relog_time: 5
+
+# Anti indicador de salud
+# Si se activa, Matrix modificara el valor de salud del jugador enviado al
+# cliente, previniendo que los jugadores usen mods para ver la salud de otros.
+anti-health-indicator: true
+
+# Ofuscacion de ping
+# Si se activa, Matrix establecera el ping del jugador (solo en la lista de tab) en 0.
+# Esto puede confundir las funciones anti-bot de algunos clientes de trampas
+# y hacer que traten a todos los jugadores como bots.
+ping-obfuscation: true
+
+# Componentes desactivados
+# Puedes desactivar una sub-deteccion especifica aqui, en lugar de desactivar toda la deteccion.
+# Puedes encontrar el nombre del componente al final de los mensajes verbose.
+# Ejemplo: Agregar "speed.web" desactivara la deteccion de web rapido
+disabled_components:
+  - 'example entry'
+
+# Peso de VL personalizado (Formato: componente: nuevo peso de VL)
+custom_vl_weight:
+  - 'example_component:5'

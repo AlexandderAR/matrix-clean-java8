@@ -1,0 +1,677 @@
+#### Matrix Konfiguration - checks.yml ##############################################
+#
+#     Hallo, willkommen bei Matrix Anti-Cheat. Dies ist checks.yml, die zur
+#  Definition der Einstellungen und Verhaltensweisen der einzelnen Checks
+#  verwendet wird. Hier kannst du die Parameter jedes Checks konfigurieren
+#  und festlegen, welche Aktionen ausgefuehrt werden, wenn ein Spieler beim
+#  Cheaten erkannt wird.
+#
+#  ACHTUNG! Bei Fehlalarmen und Bypasses solltest du zunaechst einen Bug melden.
+#  Das Anpassen der Konfigurationsdatei behebt Fehlalarme und Bypasses nicht wirklich!
+#
+#  - Was ist "VL"?
+#        "VL" steht fuer "Violation Level" (Verstosslevel). Wenn ein Spieler vom
+#    Anti-Cheat als Cheater markiert wird, erhoehen sich seine Verst   osspunkte.
+#    Wenn der VL des Spielers den Wert im "commands"-Knoten erreicht,
+#    wird der entsprechende Befehl ausgefuehrt.
+#
+#  - Bei Problemen besuche unseren offiziellen Discord:
+#    https://discord.gg/pEvY55J
+#
+#  Danke, dass du Matrix Anti-Cheat verwendest!
+#
+#####################################################################################
+
+## KillAura
+# Verhindert, dass Spieler den KillAura/AimBot-Hack verwenden
+killaura:
+  # KillAura-Check aktivieren?
+  enable: true
+
+  # Liste der verschiedenen KillAura-Check-Module von Matrix
+  modules:
+    # Prueft, ob der Spieler im Kampf unnatuerliches Verhalten zeigt
+    flaw:
+      type_a:
+        enable: true
+        vl: 3
+      type_b:
+        enable: true
+        vl: 10
+      type_c:
+        enable: true
+        vl: 10
+      type_d:
+        enable: true
+        vl: 10
+      type_e:
+        enable: true
+        vl: 5
+    # Prueft, ob der Spieler beim Angriff die korrekte Blickrichtung hat
+    rotation:
+      type_a:
+        enable: true
+        vl: 2
+      type_b:
+        enable: true
+        vl: 2
+    # Prueft, ob der Spieler Aimbot-aehnliche Zielcharakteristiken zeigt
+    aimbot:
+      vl_weight: 7
+      cancel_hit: true
+
+      check_aimbot_sync: true
+      check_aimbot_shake: true
+      check_aimbot_snap: true
+      check_aimbot_sensitivity: true
+      check_aimbot_acceleration: true
+      check_aimbot_bad_rotation: true
+
+    crystal:
+      enable: true
+      vl_weight: 5
+      cancel_attack: true
+
+    # KillAura-NPC-Check. Erzeugt einen falschen Spieler hinter dem Spieler,
+    # um KillAura-Nutzung zu erkennen. Keine Sorge, der Spieler sieht nur seinen eigenen NPC
+    npc:
+      enable: true
+      vl_weight: 5
+
+      # Soll die Positionsberechnung des NPC asynchron laufen? (kann Ressourcen verbrauchen)
+      async: true
+
+      # Sollen NPCs echte Entity-IDs verwenden statt zufaellig generierter?
+      # Einige Cheat-Clients koennen zufaellige Entity-IDs umgehen
+      real_entity_id: true
+
+      # Sollen NPCs nur erscheinen, wenn der Spieler andere Spieler angreift?
+      # Bei true wird der NPC nur erzeugt, wenn der Spieler andere Spieler angreift
+      spawn_on_attack_player: true
+
+      # Wird der NPC nur per Befehl erzeugt? Bei false wird der NPC automatisch
+      # beim Kampf erzeugt. Bei true kann der NPC nur ueber "matrix npc" erzeugt werden. (Standard: true)
+      only_command_trigger: true
+
+      # Soll der Spieler diesen NPC sehen? (true = sichtbar)
+      visible: true
+
+      # Zufaelligen Namen erzwingen (Standard: false)
+      # Wenn aktiviert, verwendet der von Matrix erzeugte NPC einen zufaelligen Namen
+      # statt eines zufaelligen Online-Spielernamens. Dies kann das Umgehen von
+      # "doppelten" Namen-NPCs verhindern. Matrix wendet jedoch keine Teams auf NPCs
+      # mit zufaelligem Namen an. Du musst moeglicherweise die API verwenden, um dies
+      # selbst einzurichten. Andernfalls umgehen einige Clients dies anhand der Namenfarbe
+      force_random_name: false
+
+      # NPC-Existenzzeit-Einstellung (Ticks)
+      check_ticks:
+        base: 100
+        attack_add: 20
+        hit_bot_add: 50
+
+      # NPC-Bewegungseinstellungen
+      movement:
+        distance_base: 3.2
+        distance_random_size: 0.75
+        distance_attack_base: 3.0
+        move_up_after_attack: false
+        max_speed: 0.5
+
+    # Kritischer-Treffer-Check. Verhindert abnormale kritische Angriffe
+    critical:
+      # Dieses Modul aktivieren?
+      enable: true
+
+      # Wie viel VL erhaelt der Spieler nach Erkennung durch dieses Modul?
+      vl_weight: 5
+
+      # Soll Matrix den Angriff des Spielers nach Erkennung abbrechen?
+      cancel_attack: true
+
+    # Strafe-Check
+    strafe:
+      enable: true
+      vl_weight: 3
+      cancel_move: true
+
+    # Kombinations-Check
+    combine:
+      aimbot_with_reach:
+        time: 5000
+        condition:
+          - 'ka.abt.magic'
+          - 'hb.reach'
+          - 'hb.reach'
+        action: 5 # +5 VL
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix npc %player% 100'
+    20: 'matrix notify %player% verwendet moeglicherweise Kampf-Hacks (KillAura)'
+    35: 'matrix notify %player% verwendet Kampf-Hacks (KillAura) #2'
+    45: 'matrix delay 5 matrix kick %player% KillAura'
+
+## HitBox
+# Verhindert, dass Spieler HitBox-, Angle- oder Reach-Hacks verwenden
+hitbox:
+  # HitBox-Check aktivieren?
+  enable: true
+
+  # Maximale Reichweite (Standard: 3.15)
+  max_reach: 3.15
+
+  # Traceback-Laenge in Ticks bei der HitBox-Berechnung
+  trace_back_length: 8
+
+  # Soll Matrix das Ziel genau verfolgen? (Standard: false)
+  # Hinweis: Diese Option kann den Bandbreitenverbrauch erhoehen
+  strict_mode: true
+
+  # Soll Matrix Raycast pruefen? (Erfordert aktivierten strikten Modus)
+  raycast: false
+
+  # Soll Matrix den Angriff des Spielers nach Erkennung abbrechen?
+  # Folgende Optionen stehen zur Verfuegung:
+  #  1. none   - nichts tun
+  #  2. silent - Schaden auf Null setzen (empfohlen)
+  #  3. cancel - Angriff abbrechen
+  cancel_way: cancel
+
+  # Benoetigte Verstoesse zum Abbrechen illegaler Treffer
+  cancel_vl: 5
+
+  # Verstoss-Gewichte
+  vl_weights:
+    miss_player_hitbox: 2
+    reach_target_standing: 10
+    reach_target_moving: 3
+
+  # Dynamische VL-Gewichtung aktivieren?
+  # Wenn aktiviert, wird das VL-Gewicht basierend auf der Reichweite des Spielers berechnet
+  # Beispiel: 1 VL bei 3.2 Reichweite, 19 VL bei 5.0 Reichweite
+  # Wenn aktiviert, sind "reach_target_standing" und "reach_target_moving" nicht mehr wirksam
+  # Hinweis: Dynamischer VL = (aktuelle_Reichweite - max_Reichweite) * Erweiterungsfaktor
+  dynamic_vl:
+    enable: true
+    expander: 10
+    min_vl: 3
+    max_vl: 8
+
+  # Maximaler VL-Anstieg in kurzer Zeit?
+  # Aufgrund instabiler Netzwerkverbindungen kann die HitBox-Erkennung bei Lag-Spikes Fehlalarme ausloesen
+  # Diese Option begrenzt den maximalen VL-Anstieg in "5 Sekunden"
+  max_burst_vl: 15
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat versucht, eine Entity ausserhalb der maximalen Reichweite zu treffen (HitBox)'
+    12: 'matrix npc %player% 120'
+    15: 'matrix notify %player% hat versucht, eine Entity ausserhalb der maximalen Reichweite zu treffen (HitBox) #2'
+    24: 'matrix kick %player% Reach/HitBox-Hacks'
+
+## Click (Klick-Check)
+# Verhindert zu schnelles Klicken oder die Verwendung von Autoclickern
+click:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Maximale CPS des Spielers? Bei Ueberschreitung wird der Spieler erkannt
+  max_cps: 15
+
+  # Module
+  check_cps: true
+  check_swing: true
+  check_timing: true
+
+  # Bei zu hoher CPS das VL-Gewicht dynamisch anhand der CPS anpassen?
+  # Je hoeher die CPS, desto hoeher der VL bei erkanntem Cheating
+  dynamic_cps_vl_weight: true
+
+  # Klickintervall-Puffergroesse (Nicht aendern!!!)
+  buffer_size: 20
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat abnormal geklickt (Click) #1'
+    18: 'matrix notify %player% hat abnormal geklickt (Click) #2'
+    30: 'matrix kick %player% Abnormales Klicken'
+
+## Move (Bewegungsgeschwindigkeits-Check)
+# Verhindert abnormale Bewegungen des Spielers
+move:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Soll Matrix NoSlow-Cheating blockieren?
+  check_noslow: true
+
+  # Soll Matrix Ground-Spoof/NoFall-Cheats erkennen?
+  check_nofall: true
+
+  # Ab diesem VL wird die abnormale Bewegung des Spielers zurueckgesetzt
+  cancel_vl: 35
+
+  # Soll Matrix dem Spieler beim Zuruecksetzen Schaden zufuegen?
+  apply_damage: true
+
+  # Soll Matrix dem Spieler erlauben, auf abgebrochenen Bloecken zu stehen?
+  # Es wird empfohlen, dies nicht zu aktivieren. Es beeinflusst die Leistung
+  # leicht und kann Bypasses verursachen.
+  # https://www.youtube.com/watch?v=9lNXNW6Phk0&t=133s
+  allow_bpe_bridge: false
+
+  # Soll Matrix die Geschwindigkeit von Spielern mit Flugfaehigkeit pruefen?
+  # Dies kann die Flugfaehigkeit einiger "PvP-Clients" einschraenken
+  check_flying_players: false
+
+  # Prueft, ob der Spieler sein Inventar waehrend der Bewegung verwendet
+  check_inventory_move: true
+
+  # Soll Matrix den Spieler in die Leere teleportieren, wenn er in der Leere cheatet?
+  allow_setback_to_void: true
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 10
+    amount: 45
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    55: 'matrix notify %player% hat versucht, sich abnormal zu bewegen (Move) #1'
+    90: 'matrix notify %player% hat versucht, sich abnormal zu bewegen (Move) #2'
+    320: 'matrix kick %player% Abnormale Bewegung'
+
+## BadPackets
+# Verhindert, dass Spieler zu viele Bewegungspakete oder illegale Pakete senden
+badpackets:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Soll Matrix verhindern, dass Spieler Bloecke in der Luft platzieren?
+  # Der Spieler muss an einem anderen Block anliegend sein, um zu platzieren
+  # Einige Schematic-Mods wie Litematica haben diese Funktion. Bei erlaubter
+  # Nutzung von Schematic-Mods kann dies deaktiviert werden
+  check_air_place: true
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 25
+
+  # Ab diesem VL wird der Timer zurueckgesetzt
+  cancel_vl: 3
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    100: 'matrix notify %player% sendet ungewoehnliche Pakete an den Server (BadPackets) #1'
+    150: 'matrix notify %player% sendet ungewoehnliche Pakete an den Server (BadPackets) #2'
+    240: 'matrix kick %player% Ungewoehnliche Pakete gesendet'
+
+## Delay (Verzoegerungs-Check)
+# Verhindert, dass Spieler bestimmte Aktionen beschleunigen, wie schnelles Essen oder Heilen
+delay:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Soll Matrix Spieleraktionen bei erkanntem Cheating blockieren?
+  cancel_action: true
+
+  # Modulliste
+  # Du kannst das VL-Gewicht jedes Moduls definieren. -1 deaktiviert es
+  check_healing: 1
+  check_using_items: 1
+  check_using_bow: 1
+  check_auto_splash: 2
+  check_inventory_action: 1
+  check_auto_totem: 1
+  check_auto_crossbow: 1
+  check_fast_throw: 1
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 2
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    3: 'matrix notify %player% versucht, Aktionen zu beschleunigen (Delay) #1'
+    5: 'matrix notify %player% versucht, Aktionen zu beschleunigen (Delay) #2'
+    10: 'matrix kick %player% Aktionsbeschleunigung'
+
+## Block (Block-Check)
+# Verhindert schnelles Abbauen oder Platzieren von Bloecken
+block:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Benoetigte Verstoesse zum Abbrechen illegalen Abbauens/Platzierens (-1 = nie abbrechen)
+  cancel_vl: 5
+
+  # Modulliste
+  # Hier koennen einzelne Module deaktiviert werden
+  modules:
+    # Erkennt schnellen Blockabbau
+    fastbreak:
+      enable: true
+      vl_weight: 4
+    # Erkennt schnelle Blockplatzierung
+    fastplace:
+      enable: true
+      vl_weight: 1
+      max_place_per_second: 9
+    # Erkennt Blockplatzierung ohne Handschwung
+    noswing:
+      enable: true
+      vl_weight: 1
+    # Erkennt fehlendes Abbau-Abbruch-Paket
+    abort:
+      enable: true
+      vl_weight: 0
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 8
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat versucht, einen Block zu schnell zu platzieren/abzubauen (FastPlace/FastBreak)'
+    20: 'matrix kick %player% FastPlace/FastBreak-Hacks'
+
+## Scaffold (Scaffold-Check)
+# Verhindert schnelleres Brueckenbauen oder Aufwaertsbauen als normal
+scaffold:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Abbruch-VL
+  cancel_vl: 15
+
+  # Module
+  modules:
+    # Erkennt schnelles Brueckenbauen
+    place:
+      enable: true
+      vl_weight: 7
+      check_jump: true
+
+    # Verhindert zu schnelles Brueckenbauen
+    delay:
+      enable: true
+      vl_weight: 5
+      cancel_place: true
+      min_delay: 6
+      min_delay_diagonal: 3
+
+    # Verhindert zu schnelles Rechtsklicken
+    right_cps:
+      enable: true
+      vl_weight: 5
+      max_cps: 29
+
+    # Erkennt schnelles Aufwaertsbauen
+    tower:
+      enable: true
+      vl_weight: 2
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 6
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat versucht, schnell Bloecke zu bruecken (Scaffold)'
+    15: 'matrix notify %player% hat versucht, schnell Bloecke zu bruecken (Scaffold) #2'
+    24: 'matrix kick %player% Scaffold/Tower'
+
+## Jesus (Wasserlaeufer-Check)
+# Verhindert zu schnelle Bewegung in Fluessigkeiten oder Laufen auf Fluessigkeiten
+jesus:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Benoetigte Verstoesse zum Abbrechen illegaler Bewegungen (-1 = nie abbrechen)
+  cancel_vl: 15
+
+  # Soll Matrix ignorieren, ob der Spieler schwimmt?
+  # Diese Funktion kann Schwimmstatus-Desync verhindern
+  ignore_swim_pose: false
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 10
+    amount: 10
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    20: 'matrix notify %player% hat versucht, sich illegal in Fluessigkeit zu bewegen (Jesus)'
+    40: 'matrix notify %player% hat versucht, sich illegal in Fluessigkeit zu bewegen (Jesus) #2'
+    50: 'matrix kick %player% Jesus/WaterSpeed/WaterFly-Hacks'
+
+## Velocity (Knockback-Check)
+# Verhindert die Verwendung von Anti-Knockback-Hacks
+velocity:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Wartezeit fuer Spielerreaktion auf Velocity (Ticks)
+  # Wenn der Spieler nach dieser Zeit nicht reagiert, wird er erkannt
+  wait_time: 20
+
+  # Lag-Spieler ignorieren. Diese Funktion kann Spieler ignorieren,
+  # die laggen oder Ressourcenpakete wechseln
+  ignore_lag: true
+
+  # VL-Gewicht der Velocity-Check-Module (-1 = deaktivieren)
+  modules:
+    respond: 5
+    vertical: 1
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 3
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat versucht, Server-Velocity zu ignorieren (Velocity)'
+    15: 'matrix notify %player% hat versucht, Server-Velocity zu ignorieren (Velocity) #2'
+    20: 'matrix kick %player% Velocity/Anti-Knockback'
+
+## Spam (Chat-Spam-Check)
+# Verhindert Chat-Spam
+chat:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Mindestzeit zwischen Nachrichten (Sekunden)
+  min_time: 3
+
+  # Benoetigte Verstoesse zum Abbrechen gesendeter Nachrichten (-1 = nie abbrechen)
+  cancel_vl: 3
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 30
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    4: 'matrix notify %player% spammt den Chat (ChatSpam)'
+    10: 'matrix kick %player% Hoere auf, den Chat zu spammen!'
+
+## Interact (Interaktions-Check)
+# Verhindert illegale Interaktion mit Entities und Bloecken
+interact:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Welche Version des Interaktions-Checks soll verwendet werden?
+  # v1 = alte Version
+  # v2 = neue Version (nur 1.8/1.12/1.19+ unterstuetzt)
+  mode: "v1"
+
+  # Soll Matrix abnormale Spielerinteraktionen strenger verhindern? (Standard: false)
+  # Kann Fehlalarme verursachen, verhindert aber mehr Hacks
+  strict: false
+
+  check_interact_block: true
+  check_attack: true
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 10
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% hat versucht, illegal mit Entity/Block zu interagieren (Interact)'
+    15: 'matrix kick %player% Illegale Interaktion mit Block/Entity'
+
+## Phase (Phasen-Check)
+# Verhindert, dass Spieler durch Bloecke gleiten
+phase:
+  # Diesen Check aktivieren?
+  enable: false
+
+  # Wie lange soll Matrix die Bewegung des Spielers verhindern, wenn er
+  # haeufig versucht, durch Bloecke zu bewegen? (Millisekunden)
+  freeze_time: 400
+
+  # Benoetigte Verstoesse zum Abbrechen illegaler Bewegungen
+  cancel_vl: 5
+
+  # Ausgeschlossene Blocktypen
+  exclude_types: []
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 10
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    7: 'matrix notify %player% gleitet durch Bloecke (Phase)'
+    13: 'matrix notify %player% gleitet durch Bloecke (Phase) #2'
+
+## AutoBot (Auto-Bot-Check)
+# Verhindert die Verwendung von Bot-Mods wie Baritone
+# HINWEIS: Dieser Check funktioniert nur fuer Premium-Benutzer
+autobot:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 2
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    5: 'matrix notify %player% steht im Verdacht, automatische Bots zu verwenden (AutoBot)'
+    10: 'matrix notify %player% steht im Verdacht, automatische Bots zu verwenden (AutoBot) #2'
+    15: 'matrix kick %player% Auto-Bot'
+
+## Elytra (Elytra-Check)
+# Verhindert die Verwendung von Elytra+, ElytraFlight usw.
+# Funktioniert nur fuer 1.9+
+elytra:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Soll Matrix Spieler, die offensichtlich cheaten, zwangsweise zuruecksetzen?
+  # Auch wenn cancel_vl nicht erreicht ist (Standard: true)
+  force_setback: true
+
+  # Zuruecksetzungs-VL (-1 = nie zuruecksetzen)
+  setback_vl: 5
+
+  # Elytra-Ableg-VL
+  # Wenn der Spieler diesen VL erreicht, beendet Matrix den Gleitflug (-1 = Funktion deaktivieren)
+  unequip_vl: 20
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 7
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    10: 'matrix notify %player% steht im Verdacht, Elytra-Flug zu verwenden (Elytra)'
+    20: 'matrix notify %player% steht im Verdacht, Elytra-Flug zu verwenden (Elytra) #2'
+    40: 'matrix kick %player% Elytra-Flug'
+
+## Vehicle (Fahrzeug-Check)
+# Verhindert die Verwendung von VehicleFlight, VehicleSpeed, EntitySpeed usw.
+# Funktioniert nur fuer 1.9+
+vehicle:
+  # Diesen Check aktivieren?
+  enable: true
+
+  # Verhindert, dass Spieler bestimmte Kreaturen als Fahrzeuge verwenden
+  # Alle Entity-Typen: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  deny_entity_types_as_vehicle:
+    - 'LLAMA'
+
+  # Fahrzeuggeschwindigkeit / Entity-Geschwindigkeit
+  speed:
+    # Dieses Modul aktivieren?
+    enable: true
+
+    # Zuruecksetzungs-VL (-1 = Zuruecksetzung deaktivieren)
+    setback_vl: 2
+
+  # Fahrzeugflug / Bootflug
+  flight:
+    # Dieses Modul aktivieren?
+    enable: true
+
+    # Zuruecksetzungs-VL (-1 = nie zuruecksetzen)
+    setback_vl: 4
+
+    # Fahrzeug-Verlassen-VL (-1 = nie verlassen)
+    leave_vehicle: 10
+
+  # Benutzerdefiniertes VL-Abkling-Intervall (Sekunden) und Abkling-Schrittgroesse
+  decay:
+    interval: 15
+    amount: 5
+
+  # Verstoss-Schwellenwerte
+  # Anzahl_der_Verstoesse: '<Befehl>'
+  commands:
+    5: 'matrix notify %player% steht im Verdacht, Fahrzeug-Cheats zu verwenden (Vehicle)'
+    10: 'matrix notify %player% steht im Verdacht, Fahrzeug-Cheats zu verwenden (Vehicle) #2'
+    17: 'matrix kick %player% Verdaechtige Fahrzeugbewegung'

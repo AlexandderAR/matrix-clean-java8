@@ -1,0 +1,95 @@
+#### Matrix Configuracion - language.yml ############################################
+#
+#     Hola, bienvenido a Matrix anti-cheat. Este es language.yml, utilizado
+#  para definir el idioma de visualizacion del anti-cheat. Aqui puedes definir
+#  que mensajes muestra el anti-cheat.
+#
+#  - Si tienes problemas, visita nuestro Discord oficial:
+#    https://discord.gg/pEvY55J
+#
+#  Gracias por usar Matrix anti-cheat!
+#
+#####################################################################################
+
+# Define el prefijo de los mensajes
+prefix: '&7[&bMatrix&7]&r '
+
+# Define el mensaje de anuncio despues de que un jugador sea expulsado por el anti-cheat
+kick-format: 'El jugador %player% fue expulsado por hacer trampa!'
+
+# Define el formato de mensaje detallado
+verbose-format: '&7%player% fallo la deteccion de &2%check% &8| &7%message%(%tooltips%) &8| &7vl:%vl%&b(+%add_vl%) &7ping:%ping% tps:%tps% component: %component% ver: %version%'
+
+# Matrix debe transmitir un mensaje cuando un jugador es expulsado?
+kick-broadcast: true
+
+# Que mensaje se debe enviar al jugador cuando Matrix detecta
+# que esta enviando mensajes de chat demasiado rapido?
+spam-warning: 'No puedes chatear tan rapido ni enviar el mismo contenido repetidamente!'
+
+# Define el mensaje que Matrix muestra cuando el jugador intenta
+# reconectarse rapidamente al servidor despues de ser expulsado
+relog-message: 'Por favor espera %time_left% segundos antes de volver a conectarte!'
+
+# Marcadores globales. Puedes definir constantes aqui y usarlas en checks.yml
+#
+#  Por ejemplo, define:
+#     kick_help: "Si crees que es un falso positivo, contacta a un moderador"
+#  Luego puedes usar %gp_kick_help% en checks.yml, se reemplazara automaticamente
+#
+global_placeholder: { }
+
+# Define alias de componentes
+component_alias: {}
+
+# Define descripciones de comandos
+commands:
+  verbose: 'Mostrar/ocultar mensajes detallados de Matrix'
+  notify: 'Enviar mensaje a todo el personal en linea'
+  toggle-notify: 'Alternar salida de mensajes de notificacion'
+  npc: 'Generar un NPC de deteccion de KillAura detras del jugador'
+  kick: 'Expulsar a un jugador'
+  msg: 'Enviar mensajes de advertencia a un jugador'
+  gui: 'Abrir panel de control'
+  violations: 'Abrir GUI de violaciones'
+  ping: 'Obtener el valor de latencia del jugador'
+  cps: 'Monitorear datos de CPS del jugador'
+  reload: 'Recargar configuracion'
+  lang: 'Cambiar idioma de visualizacion'
+
+gui:
+  main:
+    toggle-checks:
+      name: '&aAlternar detecciones'
+      description: '&7Clic para abrir GUI de detecciones'
+    show-violations:
+      name: '&aMostrar violaciones'
+      description: '&7Clic para abrir GUI de violaciones'
+    toggle-verbose:
+      name: '&aAlternar verbose'
+      description: '&7Clic para activar/desactivar mensajes detallados'
+    reload-matrix:
+      name: '&cRecargar Matrix'
+      description: '&7Clic para recargar el plugin'
+    server-status:
+      name: '&bEstado del servidor'
+    support-links:
+      name: '&bEnlaces de soporte'
+    premium-user:
+      name: '&bUsuario premium'
+    close-gui:
+      name: '&cCerrar GUI'
+
+misc:
+  update:
+    start-checking: 'Verificando actualizaciones...'
+    updater: '§a> Matrix Updater:'
+    has-update: '§cMatrix tiene una actualizacion: §f%latest%  §cVersion actual: §2%current%'
+    latest: '§aEstas usando la ultima version de Matrix Anti-Cheat <3'
+    download-link: '§cEnlace de descarga'
+  premium:
+    pass: 'Verificacion de version premium aprobada!'
+    expire-time: 'Fecha de expiracion: %time%'
+  reload:
+    start-reload: 'Recargando Matrix...'
+    reloaded: 'Matrix recargado.'

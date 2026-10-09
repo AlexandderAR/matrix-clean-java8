@@ -1,0 +1,676 @@
+#### Matrix Configuracion - checks.yml ##############################################
+#
+#     Hola, bienvenido a Matrix anti-cheat. Este es checks.yml, utilizado para
+#  definir la configuracion y el comportamiento de cada deteccion. Aqui puedes
+#  configurar los parametros de cada comprobacion y definir las acciones a
+#  ejecutar cuando se detecte que un jugador esta haciendo trampa.
+#
+#  ATENCION! Si encuentras falsos positivos o bypasses, primero considera
+#  reportar el error. Ajustar el archivo de configuracion no solucionara
+#  realmente los falsos positivos y bypasses.
+#
+#  - Que es "VL"?
+#        "VL" es la abreviatura de "Violation Level" (Nivel de Violacion).
+#    Cuando un jugador es marcado como tramposo por el anti-cheat, se
+#    incrementa su nivel de violacion. Cuando el VL del jugador alcanza el
+#    valor en el nodo "commands", se ejecutara el comando correspondiente.
+#
+#  - Si tienes problemas, visita nuestro Discord oficial:
+#    https://discord.gg/pEvY55J
+#
+#  Gracias por usar Matrix anti-cheat!
+#
+#####################################################################################
+
+## KillAura
+# Previene el uso de KillAura/AimBot
+killaura:
+  # Activar deteccion de KillAura?
+  enable: true
+
+  # Lista de los diversos modulos de deteccion de KillAura de Matrix
+  modules:
+    # Comprueba si el jugador muestra fallos en el combate
+    flaw:
+      type_a:
+        enable: true
+        vl: 3
+      type_b:
+        enable: true
+        vl: 10
+      type_c:
+        enable: true
+        vl: 10
+      type_d:
+        enable: true
+        vl: 10
+      type_e:
+        enable: true
+        vl: 5
+    # Comprueba si el jugador tiene la rotacion correcta al atacar
+    rotation:
+      type_a:
+        enable: true
+        vl: 2
+      type_b:
+        enable: true
+        vl: 2
+    # Comprueba si el jugador muestra caracteristicas de apuntado similares a aimbot
+    aimbot:
+      vl_weight: 7
+      cancel_hit: true
+
+      check_aimbot_sync: true
+      check_aimbot_shake: true
+      check_aimbot_snap: true
+      check_aimbot_sensitivity: true
+      check_aimbot_acceleration: true
+      check_aimbot_bad_rotation: true
+
+    crystal:
+      enable: true
+      vl_weight: 5
+      cancel_attack: true
+
+    # Deteccion NPC de KillAura. Genera un jugador falso detras del jugador para detectar
+    # si esta usando KillAura. No te preocupes, el jugador solo puede ver su propio NPC
+    npc:
+      enable: true
+      vl_weight: 5
+
+      # El calculo de posicion del NPC debe ejecutarse de forma asincrona? (puede consumir recursos)
+      async: true
+
+      # Los NPCs deben usar IDs de entidad reales en lugar de generarlas aleatoriamente?
+      # Algunos clientes de trampas pueden evadir IDs de entidad aleatorias
+      real_entity_id: true
+
+      # Los NPCs solo deben aparecer cuando el jugador ataca a otros jugadores?
+      # Si es true, el NPC solo se generara cuando el jugador ataque a otros jugadores
+      spawn_on_attack_player: true
+
+      # El NPC se genera solo por comando? Si es false, el NPC se genera automaticamente
+      # durante el combate. Si es true, solo puedes generar un NPC mediante "matrix npc". (predeterminado: true)
+      only_command_trigger: true
+
+      # El jugador debe ver este NPC? (true = visible)
+      visible: true
+
+      # Forzar nombre aleatorio (predeterminado: false)
+      # Si se activa, el NPC generado por Matrix usara un nombre aleatorio en lugar de
+      # nombres de jugadores en linea. Esto puede resolver el problema de algunos clientes
+      # que evaden NPCs con nombres "duplicados". Sin embargo, Matrix NO aplicara equipos
+      # al NPC con nombre aleatorio. Puedes necesitar la API para configurarlo tu mismo.
+      # De lo contrario, algunos clientes evadiran basandose en si el nombre del NPC tiene color
+      force_random_name: false
+
+      # Configuracion de tiempo de existencia del NPC (ticks)
+      check_ticks:
+        base: 100
+        attack_add: 20
+        hit_bot_add: 50
+
+      # Configuracion de movimiento del NPC
+      movement:
+        distance_base: 3.2
+        distance_random_size: 0.75
+        distance_attack_base: 3.0
+        move_up_after_attack: false
+        max_speed: 0.5
+
+    # Deteccion de golpe critico. Previene ataques criticos anormales
+    critical:
+      # Activar este modulo?
+      enable: true
+
+      # Cuanto VL recibe el jugador al ser detectado por este modulo?
+      vl_weight: 5
+
+      # Matrix debe cancelar el ataque del jugador despues de detectar trampa?
+      cancel_attack: true
+
+    # Deteccion de Strafe
+    strafe:
+      enable: true
+      vl_weight: 3
+      cancel_move: true
+
+    # Deteccion combinada
+    combine:
+      aimbot_with_reach:
+        time: 5000
+        condition:
+          - 'ka.abt.magic'
+          - 'hb.reach'
+          - 'hb.reach'
+        action: 5 # +5 VL
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix npc %player% 100'
+    20: 'matrix notify %player% podria estar usando hacks de combate (KillAura)'
+    35: 'matrix notify %player% esta usando hacks de combate (KillAura) #2'
+    45: 'matrix delay 5 matrix kick %player% KillAura'
+
+## HitBox
+# Previene el uso de hacks de HitBox, Angle y Reach
+hitbox:
+  # Activar deteccion de HitBox?
+  enable: true
+
+  # Distancia maxima de alcance (predeterminado: 3.15)
+  max_reach: 3.15
+
+  # Longitud en ticks del rastreo hacia atras al calcular el hitbox
+  trace_back_length: 8
+
+  # Matrix debe rastrear el objetivo con precision? (predeterminado: false)
+  # Nota: esta opcion puede aumentar el uso de ancho de banda
+  strict_mode: true
+
+  # Matrix debe verificar el raycast? (requiere modo estricto activado)
+  raycast: false
+
+  # Matrix debe cancelar el ataque del jugador despues de detectar trampa?
+  # Opciones disponibles:
+  #  1. none   - no hacer nada
+  #  2. silent - establecer el dano en cero (recomendado)
+  #  3. cancel - cancelar el ataque
+  cancel_way: cancel
+
+  # Violaciones necesarias para cancelar golpes ilegales
+  cancel_vl: 5
+
+  # Pesos de violacion
+  vl_weights:
+    miss_player_hitbox: 2
+    reach_target_standing: 10
+    reach_target_moving: 3
+
+  # Activar peso de VL dinamico?
+  # Si se activa, el peso del VL se calculara basandose en el alcance del jugador
+  # Ejemplo: 1vl con alcance 3.2, 19vl con alcance 5.0
+  # Si se activa, "reach_target_standing" y "reach_target_moving" dejaran de funcionar
+  # Nota: VL dinamico = (alcance_actual - alcance_maximo) * expansor
+  dynamic_vl:
+    enable: true
+    expander: 10
+    min_vl: 3
+    max_vl: 8
+
+  # Cual es el aumento maximo de VL en poco tiempo?
+  # Debido a la inestabilidad de la conexion de red, la deteccion de HitBox puede causar
+  # falsos positivos durante picos de lag. Esta opcion limita el aumento maximo de VL en "5 segundos"
+  max_burst_vl: 15
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento alcanzar una entidad fuera de la distancia maxima (HitBox)'
+    12: 'matrix npc %player% 120'
+    15: 'matrix notify %player% intento alcanzar una entidad fuera de la distancia maxima (HitBox) #2'
+    24: 'matrix kick %player% Hacks de Reach/HitBox'
+
+## Click (Deteccion de clics)
+# Previene clics demasiado rapidos o el uso de autoclickers
+click:
+  # Activar esta deteccion?
+  enable: true
+
+  # Cual debe ser el CPS maximo del jugador? Al superar este CPS sera detectado
+  max_cps: 15
+
+  # Modulos
+  check_cps: true
+  check_swing: true
+  check_timing: true
+
+  # Al detectar CPS demasiado alto, ajustar dinamicamente el peso de VL segun el CPS?
+  # Cuanto mayor sea el CPS, mayor sera el VL obtenido al detectar trampa
+  dynamic_cps_vl_weight: true
+
+  # Tamano del buffer de intervalo de clics (No modificar!!!)
+  buffer_size: 20
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento hacer clic de forma anormal (Click) #1'
+    18: 'matrix notify %player% intento hacer clic de forma anormal (Click) #2'
+    30: 'matrix kick %player% Clics anormales'
+
+## Move (Deteccion de velocidad de movimiento)
+# Previene movimientos anormales del jugador
+move:
+  # Activar esta deteccion?
+  enable: true
+
+  # Matrix debe bloquear trampa de NoSlow?
+  check_noslow: true
+
+  # Matrix debe detectar trampa de ground spoof/nofall?
+  check_nofall: true
+
+  # Cuando el jugador alcance este VL, se comenzara a revertir el movimiento anormal
+  cancel_vl: 35
+
+  # Matrix debe aplicar dano al jugador cuando sea revertido?
+  apply_damage: true
+
+  # Matrix debe permitir que el jugador permanezca en bloques cancelados?
+  # Se recomienda no activar esto, afecta ligeramente el rendimiento y puede causar bypasses
+  # https://www.youtube.com/watch?v=9lNXNW6Phk0&t=133s
+  allow_bpe_bridge: false
+
+  # Matrix debe verificar la velocidad de jugadores con habilidad de vuelo?
+  # Esto puede restringir la capacidad de vuelo de algunos "clientes PvP"
+  check_flying_players: false
+
+  # Verificar si el jugador usa el inventario mientras se mueve
+  check_inventory_move: true
+
+  # Matrix debe teleportar al jugador al vacio si hace trampa en el vacio?
+  allow_setback_to_void: true
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 10
+    amount: 45
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    55: 'matrix notify %player% intento moverse de forma anormal (Move) #1'
+    90: 'matrix notify %player% intento moverse de forma anormal (Move) #2'
+    320: 'matrix kick %player% Movimiento anormal'
+
+## BadPackets (Paquetes anomalos)
+# Previene que el jugador envie demasiados paquetes de movimiento o paquetes ilegales
+badpackets:
+  # Activar esta deteccion?
+  enable: true
+
+  # Matrix debe bloquear que el jugador coloque bloques en el aire?
+  # El jugador debe estar junto a otro bloque para colocar, de lo contrario sera detectado
+  # Algunos mods de esquema como Litematica tienen esta funcion, puedes desactivarlo
+  # si permites que los jugadores usen mods de esquema
+  check_air_place: true
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 25
+
+  # Cuando el jugador alcance este VL, se comenzara a revertir el temporizador
+  cancel_vl: 3
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    100: 'matrix notify %player% esta enviando paquetes inusuales al servidor (BadPackets) #1'
+    150: 'matrix notify %player% esta enviando paquetes inusuales al servidor (BadPackets) #2'
+    240: 'matrix kick %player% Envio de paquetes inusuales'
+
+## Delay (Deteccion de retraso)
+# Previene que el jugador acelere ciertas acciones, como comer rapido o curarse rapido
+delay:
+  # Activar esta deteccion?
+  enable: true
+
+  # Matrix debe bloquear las acciones del jugador cuando se detecte trampa?
+  cancel_action: true
+
+  # Lista de modulos
+  # Puedes definir el peso de VL de cada modulo. -1 para desactivar
+  check_healing: 1
+  check_using_items: 1
+  check_using_bow: 1
+  check_auto_splash: 2
+  check_inventory_action: 1
+  check_auto_totem: 1
+  check_auto_crossbow: 1
+  check_fast_throw: 1
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 2
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    3: 'matrix notify %player% esta intentando acelerar acciones (Delay) #1'
+    5: 'matrix notify %player% esta intentando acelerar acciones (Delay) #2'
+    10: 'matrix kick %player% Aceleracion de acciones'
+
+## Block (Deteccion de bloques)
+# Previene que el jugador destruya o coloque bloques rapidamente
+block:
+  # Activar esta deteccion?
+  enable: true
+
+  # Violaciones necesarias para cancelar destruccion/colocacion ilegal (-1 = nunca cancelar)
+  cancel_vl: 5
+
+  # Lista de modulos
+  # Puedes desactivar algunos modulos aqui
+  modules:
+    # Detecta si el jugador destruye bloques mas rapido
+    fastbreak:
+      enable: true
+      vl_weight: 4
+    # Detecta si el jugador coloca bloques mas rapido
+    fastplace:
+      enable: true
+      vl_weight: 1
+      max_place_per_second: 9
+    # Detecta si el jugador coloca bloques sin agitar la mano
+    noswing:
+      enable: true
+      vl_weight: 1
+    # Detecta si el jugador no envia el paquete de abortar destruccion
+    abort:
+      enable: true
+      vl_weight: 0
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 8
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento colocar/destruir un bloque demasiado rapido (FastPlace/FastBreak)'
+    20: 'matrix kick %player% Hacks de FastPlace/FastBreak'
+
+## Scaffold (Deteccion de scaffold)
+# Previene que el jugador construya puentes o torres mas rapido de lo normal
+scaffold:
+  # Activar esta deteccion?
+  enable: true
+
+  # VL de cancelacion
+  cancel_vl: 15
+
+  # Modulos
+  modules:
+    # Detecta si el jugador construye puentes mas rapido
+    place:
+      enable: true
+      vl_weight: 7
+      check_jump: true
+
+    # Previene que el jugador construya puentes demasiado rapido
+    delay:
+      enable: true
+      vl_weight: 5
+      cancel_place: true
+      min_delay: 6
+      min_delay_diagonal: 3
+
+    # Previene clic derecho demasiado rapido
+    right_cps:
+      enable: true
+      vl_weight: 5
+      max_cps: 29
+
+    # Detecta si el jugador construye torres mas rapido
+    tower:
+      enable: true
+      vl_weight: 2
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 6
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento construir puentes rapidamente (Scaffold)'
+    15: 'matrix notify %player% intento construir puentes rapidamente (Scaffold) #2'
+    24: 'matrix kick %player% Scaffold/Tower'
+
+## Jesus (Deteccion de caminar sobre agua)
+# Previene que el jugador se mueva rapido en liquidos o camine sobre ellos
+jesus:
+  # Activar esta deteccion?
+  enable: true
+
+  # Violaciones necesarias para cancelar movimientos ilegales (-1 = nunca cancelar)
+  cancel_vl: 15
+
+  # Matrix debe ignorar si el jugador esta nadando?
+  # Esta funcion puede prevenir la desincronizacion del estado de natacion
+  ignore_swim_pose: false
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 10
+    amount: 10
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    20: 'matrix notify %player% intento moverse ilegalmente en liquido (Jesus)'
+    40: 'matrix notify %player% intento moverse ilegalmente en liquido (Jesus) #2'
+    50: 'matrix kick %player% Hacks de Jesus/WaterSpeed/WaterFly'
+
+## Velocity (Deteccion de knockback)
+# Previene el uso de hacks de anti-knockback
+velocity:
+  # Activar esta deteccion?
+  enable: true
+
+  # Tiempo de espera para que el jugador responda a velocity (ticks)
+  # Si el jugador no responde despues de este tiempo, sera detectado
+  wait_time: 20
+
+  # Ignorar jugadores con lag. Esta funcion puede ignorar jugadores
+  # que estan con lag o cambiando paquetes de recursos
+  ignore_lag: true
+
+  # Peso de VL de los modulos de deteccion de velocity (-1 = desactivar)
+  modules:
+    respond: 5
+    vertical: 1
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 3
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento ignorar la velocidad del servidor (Velocity)'
+    15: 'matrix notify %player% intento ignorar la velocidad del servidor (Velocity) #2'
+    20: 'matrix kick %player% Velocity/Anti-Knockback'
+
+## Spam (Deteccion de spam en chat)
+# Previene que el jugador envie spam en el chat del servidor
+chat:
+  # Activar esta deteccion?
+  enable: true
+
+  # Tiempo minimo entre mensajes (segundos)
+  min_time: 3
+
+  # Violaciones necesarias para cancelar mensajes enviados (-1 = nunca cancelar)
+  cancel_vl: 3
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 30
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    4: 'matrix notify %player% esta haciendo spam en el chat (ChatSpam)'
+    10: 'matrix kick %player% Deja de hacer spam en el chat!'
+
+## Interact (Deteccion de interaccion)
+# Previene interacciones ilegales con entidades y bloques
+interact:
+  # Activar esta deteccion?
+  enable: true
+
+  # Que version de la deteccion de interaccion se debe usar?
+  # v1 = version antigua
+  # v2 = version nueva (solo soporta 1.8/1.12/1.19+)
+  mode: "v1"
+
+  # Matrix debe ser mas estricto al prevenir interacciones anormales? (predeterminado: false)
+  # Puede causar falsos positivos, pero puede prevenir mas hacks
+  strict: false
+
+  check_interact_block: true
+  check_attack: true
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 10
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% intento interactuar ilegalmente con Entidad/Bloque (Interact)'
+    15: 'matrix kick %player% Interaccion ilegal con Bloque/Entidad'
+
+## Phase (Deteccion de phase)
+# Previene que los jugadores atraviesen bloques
+phase:
+  # Activar esta deteccion?
+  enable: false
+
+  # Cuanto tiempo debe Matrix prevenir el movimiento del jugador si
+  # intenta frecuentemente atravesar bloques? (milisegundos)
+  freeze_time: 400
+
+  # Violaciones necesarias para cancelar movimientos ilegales
+  cancel_vl: 5
+
+  # Tipos de bloques excluidos
+  exclude_types: []
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 10
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    7: 'matrix notify %player% esta atravesando bloques (Phase)'
+    13: 'matrix notify %player% esta atravesando bloques (Phase) #2'
+
+## AutoBot (Deteccion de bot automatico)
+# Previene el uso de mods de bots como Baritone
+# NOTA: Esta deteccion solo funciona para usuarios premium
+autobot:
+  # Activar esta deteccion?
+  enable: true
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 2
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    5: 'matrix notify %player% sospechoso de usar bots automaticos (AutoBot)'
+    10: 'matrix notify %player% sospechoso de usar bots automaticos (AutoBot) #2'
+    15: 'matrix kick %player% Bot automatico'
+
+## Elytra (Deteccion de Elytra)
+# Previene el uso de Elytra+, ElytraFlight, etc.
+# Solo funciona en 1.9+
+elytra:
+  # Activar esta deteccion?
+  enable: true
+
+  # Matrix debe forzar la reversion de jugadores que estan haciendo trampa?
+  # Incluso si no alcanzan el cancel_vl (predeterminado: true)
+  force_setback: true
+
+  # VL de reversion (-1 = nunca revertir)
+  setback_vl: 5
+
+  # VL para desequipar elytra
+  # Si el jugador alcanza este VL, Matrix lo sacara del estado de planeo (-1 = desactivar)
+  unequip_vl: 20
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 7
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    10: 'matrix notify %player% sospechoso de usar vuelo con elytra (Elytra)'
+    20: 'matrix notify %player% sospechoso de usar vuelo con elytra (Elytra) #2'
+    40: 'matrix kick %player% Vuelo con Elytra'
+
+## Vehicle (Deteccion de vehiculos)
+# Previene el uso de VehicleFlight, VehicleSpeed, EntitySpeed, etc.
+# Solo funciona en 1.9+
+vehicle:
+  # Activar esta deteccion?
+  enable: true
+
+  # Prevenir que los jugadores usen ciertas criaturas como vehiculos
+  # Todos los tipos de entidad: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  deny_entity_types_as_vehicle:
+    - 'LLAMA'
+
+  # Velocidad de vehiculo / Velocidad de entidad
+  speed:
+    # Activar este modulo?
+    enable: true
+
+    # VL de reversion (-1 = desactivar reversion)
+    setback_vl: 2
+
+  # Vuelo de vehiculo / Vuelo de bote
+  flight:
+    # Activar este modulo?
+    enable: true
+
+    # VL de reversion (-1 = nunca revertir)
+    setback_vl: 4
+
+    # VL para abandonar vehiculo (-1 = nunca abandonar)
+    leave_vehicle: 10
+
+  # Intervalo de decaimiento de VL personalizado (segundos) y tamano del paso de decaimiento
+  decay:
+    interval: 15
+    amount: 5
+
+  # Umbrales de violacion
+  # numero_de_violaciones: '<comando>'
+  commands:
+    5: 'matrix notify %player% sospechoso de usar trampa de vehiculo (Vehicle)'
+    10: 'matrix notify %player% sospechoso de usar trampa de vehiculo (Vehicle) #2'
+    17: 'matrix kick %player% Movimiento sospechoso de vehiculo'

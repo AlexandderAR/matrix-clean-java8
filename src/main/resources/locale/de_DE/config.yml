@@ -1,0 +1,109 @@
+#### Matrix Konfiguration - config.yml ##############################################
+#
+#     Hallo, willkommen bei Matrix Anti-Cheat. Dies ist config.yml, die zur
+#  Definition der globalen Einstellungen von Matrix verwendet wird.
+#
+#  - Bei Problemen besuche unseren offiziellen Discord:
+#    https://discord.gg/pEvY55J
+#
+#  Nuetzliche Links:
+#    Website: https://matrix.rip
+#    Discord: https://discord.gg/pEvY55J
+#    Wiki: https://wiki.matrix.rip
+#    Issue Tracker: https://github.com/jiangdashao/Matrix-Issues/issues
+#
+#  Danke, dass du Matrix Anti-Cheat verwendest!
+#
+#####################################################################################
+
+# Offline-Plan-Modus
+# Wenn aktiviert, ueberspringt Matrix alle Lizenzpruefungsanfragen und laeuft
+# mit vollem Enterprise-Plan ohne den Lizenzserver zu kontaktieren.
+offline-plan: true
+
+# Soll Matrix beim Start nach Updates suchen?
+check_update: true
+
+# Gib hier deinen Zugriffstoken ein. Du kannst ihn unter https://localhost/offline erhalten (Client - Token)
+# Teile deinen Zugriffstoken NICHT mit anderen!
+# Wenn du das Plugin von PluginCloud heruntergeladen hast, musst du dies nicht manuell eingeben
+# access_token: ''
+
+# Aktualisierungsintervall des Berechtigungs-Cache (Einheit: Sekunden, Standard: 15)
+permission_refresh_interval: 15
+
+# BungeeCord GeyserMC-Unterstuetzung aktivieren?
+# Matrix unterstuetzt zwei Moeglichkeiten, GeyserMC auszufuehren:
+#   1. Spigot-Modus: GeyserMC/FloodGate in Spigot installieren. Diese Einstellung muss nicht geaendert werden, Matrix unterstuetzt es automatisch
+#   2. Bungee-Modus: Wenn GeyserMC in BungeeCord installiert ist, muss diese Option aktiviert und Matrix auch in BungeeCord installiert werden
+# !!!    Aktiviere diese Option NICHT, wenn GeyserMC NICHT in BungeeCord installiert ist
+bungee_geysermc_support: false
+
+# Soll ein Blitz-Effekt erscheinen, wenn jemand mit /matrix kick gekickt wird?
+kick_strike_lightning: true
+
+# Discord Webhook
+discord_webhook:
+  # Discord Webhook aktivieren
+  enable: false
+
+  # Webhook-URL
+  url: ''
+
+# Server-Lag-Schutz
+# Deaktiviert automatisch einige Checks, wenn der Server laggt.
+# Dies verhindert die meisten, aber nicht alle, Fehlalarme.
+tps_protection:
+  # Diese Funktion aktivieren?
+  enable: true
+
+  # Mindest-TPS zum Ausloesen des Schutzes
+  min_tps: 17.0
+
+  # Lag-Spike-Schwellenwert (Millisekunden)
+  # Wenn der Server fuer einen bestimmten Zeitraum nicht reagiert, werden Checks deaktiviert
+  lag_threshold: 1000
+
+# Verstoesse protokollieren (Standard: true)
+# Protokolliert alle Verstoesse in einer Datei. Dateien befinden sich in /plugins/Matrix/logs
+# Warnung: Bei Verwendung von BungeeCord wird empfohlen, dies auf FALSE zu setzen.
+# Dies verhindert, dass unnoetige Logdateien gespeichert werden und Speicherplatz belegen.
+log_file: true
+
+# Veraltete Logdateien loeschen (Tage)
+# Logdateien, die laenger als die angegebene Anzahl von Tagen gespeichert sind, werden geloescht
+# Auf -1 setzen, um diese Funktion zu deaktivieren
+delete_time: 30
+
+# Bypass-Berechtigung verweigern (Standard: false)
+# Bei TRUE wird Matrix gezwungen, jeden auf dem Server zu ueberpruefen,
+# EINSCHLIESSLICH aller Spieler mit OP-Status. So kannst du Tests durchfuehren,
+# ohne deinen OP-Status entfernen zu muessen.
+disable_bypass_permission: false
+
+## Wiedereintrittszeit
+# Wie lange nach einem Kick darf sich der Spieler wieder einloggen? (Sekunden)
+# Auf -1 setzen, um diese Funktion zu deaktivieren
+relog_time: 5
+
+# Anti-Gesundheitsanzeige
+# Wenn aktiviert, aendert Matrix den an den Client gesendeten Gesundheitswert
+# und verhindert, dass Spieler Mods verwenden, um die Gesundheit anderer Spieler zu sehen.
+anti-health-indicator: true
+
+# Ping-Verschleierung
+# Wenn aktiviert, setzt Matrix den Ping des Spielers (nur in der Tab-Liste) auf 0.
+# Dies kann die Anti-Bot-Funktionen einiger Cheat-Clients verwirren und dazu bringen,
+# alle Spieler als Bots zu behandeln.
+ping-obfuscation: true
+
+# Deaktivierte Komponenten
+# Hier kannst du einen bestimmten Sub-Check deaktivieren, anstatt den gesamten Check zu deaktivieren.
+# Komponentennamen findest du am Ende der Verbose-Nachrichten.
+# Beispiel: "speed.web" hinzufuegen deaktiviert den schnellen Web-Check
+disabled_components:
+  - 'example entry'
+
+# Benutzerdefiniertes VL-Gewicht (Format: Komponente: neues VL-Gewicht)
+custom_vl_weight:
+  - 'example_component:5'

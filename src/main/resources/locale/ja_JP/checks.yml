@@ -1,0 +1,676 @@
+#### Matrix 設定 - checks.yml ####################################################
+#
+#     こんにちは、Matrix アンチチートへようこそ。これは checks.yml で、
+#  各検出の設定と動作を定義するために使用されます。ここで各検出のパラメータ
+#  を設定でき、プレイヤーの不正行為を検出した後のアクションも定義できます。
+#
+#  注意！誤検知やバイパスが発生した場合は、まずバグとして報告することを
+#  検討してください。設定ファイルを調整しても、誤検知やバイパスを
+#  本当に修正することはできません！
+#
+#  - "VL" とは？
+#        "VL" は "Violation Level"（違反レベル）の略です。プレイヤーが
+#    アンチチートによって不正行為としてマークされると、違反レベルが増加します。
+#    プレイヤーの VL が以下の "commands" ノードの値に達すると、
+#    対応するコマンドが実行されます。
+#
+#  - 問題が発生した場合は、公式 Discord でサポートを受けてください：
+#    https://discord.gg/pEvY55J
+#
+#  Matrix アンチチートをご利用いただきありがとうございます！
+#
+#####################################################################################
+
+## KillAura
+# プレイヤーの KillAura/AimBot ハックの使用を防止します
+killaura:
+  # KillAura 検出を有効にしますか？
+  enable: true
+
+  # Matrix の各種 KillAura 検出モジュールの一覧
+  modules:
+    # プレイヤーの戦闘中の不自然な挙動を検出します
+    flaw:
+      type_a:
+        enable: true
+        vl: 3
+      type_b:
+        enable: true
+        vl: 10
+      type_c:
+        enable: true
+        vl: 10
+      type_d:
+        enable: true
+        vl: 10
+      type_e:
+        enable: true
+        vl: 5
+    # プレイヤーの攻撃時の視点方向が正しいか検出します
+    rotation:
+      type_a:
+        enable: true
+        vl: 2
+      type_b:
+        enable: true
+        vl: 2
+    # プレイヤーが AimBot に似たエイム特性を示しているか検出します
+    aimbot:
+      vl_weight: 7
+      cancel_hit: true
+
+      check_aimbot_sync: true
+      check_aimbot_shake: true
+      check_aimbot_snap: true
+      check_aimbot_sensitivity: true
+      check_aimbot_acceleration: true
+      check_aimbot_bad_rotation: true
+
+    crystal:
+      enable: true
+      vl_weight: 5
+      cancel_attack: true
+
+    # KillAura NPC 検出。プレイヤーの背後に偽のプレイヤーを生成して
+    # KillAura の使用を検出します。プレイヤーは自分の NPC のみ見えるのでご安心ください
+    npc:
+      enable: true
+      vl_weight: 5
+
+      # NPC の位置計算を非同期で実行しますか？（リソースを消費する場合があります）
+      async: true
+
+      # NPC はランダム生成ではなく実際のエンティティ ID を使用しますか？
+      # 一部のチートクライアントはランダムなエンティティ ID をバイパスできます
+      real_entity_id: true
+
+      # NPC はプレイヤーが他のプレイヤーを攻撃している時のみ生成しますか？
+      # true に設定すると、プレイヤーが他のプレイヤーを攻撃している時のみ NPC が生成されます
+      spawn_on_attack_player: true
+
+      # NPC はコマンドでのみ生成しますか？false に設定すると、プレイヤーが戦闘時に
+      # 自動的に NPC が生成されます。true に設定すると、"matrix npc" コマンドでのみ
+      # NPC を生成できます。（デフォルト：true）
+      only_command_trigger: true
+
+      # プレイヤーにこの NPC が見えるようにしますか？（true = 表示）
+      visible: true
+
+      # ランダム名を強制しますか？（デフォルト：false）
+      # このオプションを有効にすると、Matrix が生成する NPC はオンラインプレイヤーの
+      # ランダム名ではなく、強制的にランダム名を使用します。これにより一部のクライアントが
+      # "重複" 名の NPC をバイパスする問題を解決できます。ただし Matrix はランダム名の
+      # NPC にチームを適用しないため、API を使用して自分で設定する必要があります。
+      # そうしないと、一部のクライアントは NPC 名に色があるかどうかでバイパスします
+      force_random_name: false
+
+      # NPC 存在時間設定（tick）
+      check_ticks:
+        base: 100
+        attack_add: 20
+        hit_bot_add: 50
+
+      # NPC の動作設定
+      movement:
+        distance_base: 3.2
+        distance_random_size: 0.75
+        distance_attack_base: 3.0
+        move_up_after_attack: false
+        max_speed: 0.5
+
+    # クリティカルヒット検出。プレイヤーの異常なクリティカル攻撃を防止します
+    critical:
+      # このモジュールを有効にしますか？
+      enable: true
+
+      # このモジュールでフラグされた場合、プレイヤーが得る VL は？
+      vl_weight: 5
+
+      # 不正行為を検出した後、プレイヤーの攻撃をキャンセルしますか？
+      cancel_attack: true
+
+    # ストレイフ検出
+    strafe:
+      enable: true
+      vl_weight: 3
+      cancel_move: true
+
+    # コンビネーション検出
+    combine:
+      aimbot_with_reach:
+        time: 5000
+        condition:
+          - 'ka.abt.magic'
+          - 'hb.reach'
+          - 'hb.reach'
+        action: 5 # +5 VL
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix npc %player% 100'
+    20: 'matrix notify %player% が戦闘ハックを使用している可能性があります (KillAura)'
+    35: 'matrix notify %player% が戦闘ハックを使用しています (KillAura) #2'
+    45: 'matrix delay 5 matrix kick %player% KillAura'
+
+## HitBox
+# プレイヤーの HitBox、Angle、Reach ハックの使用を防止します
+hitbox:
+  # HitBox 検出を有効にしますか？
+  enable: true
+
+  # 最大リーチ距離（デフォルト：3.15）
+  max_reach: 3.15
+
+  # ヒットボックス計算時のトレースバックの tick 数
+  trace_back_length: 8
+
+  # Matrix はターゲットを正確に追跡しますか？（デフォルト：false）
+  # 注意：このオプションは帯域幅の使用量が増加する可能性があります
+  strict_mode: true
+
+  # Matrix はレイキャストを検出しますか？（ストリクトモードが必要）
+  raycast: false
+
+  # 不正行為を検出した後、Matrix はプレイヤーの攻撃をキャンセルしますか？
+  # 以下の選択肢があります：
+  #  1. none   - 何もしない
+  #  2. silent - ダメージをゼロに設定（推奨）
+  #  3. cancel - 攻撃をキャンセル
+  cancel_way: cancel
+
+  # 不正な攻撃をキャンセルするために必要な違反回数
+  cancel_vl: 5
+
+  # 違反の重み
+  vl_weights:
+    miss_player_hitbox: 2
+    reach_target_standing: 10
+    reach_target_moving: 3
+
+  # 動的 VL 重みを有効にしますか？
+  # 有効にすると、VL の重みはプレイヤーのリーチ距離に基づいて計算されます
+  # 例：3.2 リーチ使用時は 1vl、5.0 リーチ使用時は 19vl
+  # この機能を有効にすると、"reach_target_standing" と "reach_target_moving" は無効になります
+  # 注意：動的 VL = (現在のリーチ - 最大リーチ) * 拡張係数
+  dynamic_vl:
+    enable: true
+    expander: 10
+    min_vl: 3
+    max_vl: 8
+
+  # 短時間での VL の最大増加量は？
+  # ネットワーク接続の不安定さにより、ラグスパイク時に HitBox 検出が誤報を発生させる場合があります
+  # このオプションは "5 秒" 内の VL の最大増加量を制限します
+  max_burst_vl: 15
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% が最大リーチ距離を超えてエンティティに攻撃しようとしました (HitBox)'
+    12: 'matrix npc %player% 120'
+    15: 'matrix notify %player% が最大リーチ距離を超えてエンティティに攻撃しようとしました (HitBox) #2'
+    24: 'matrix kick %player% Reach/HitBox ハック'
+
+## Click（クリック検出）
+# プレイヤーのクリック速度が速すぎることや、オートクリッカーの使用を防止します
+click:
+  # この検出を有効にしますか？
+  enable: true
+
+  # プレイヤーの最大 CPS は？この CPS を超えると検出されます
+  max_cps: 15
+
+  # モジュール
+  check_cps: true
+  check_swing: true
+  check_timing: true
+
+  # CPS が高すぎる場合、CPS に応じて VL の重みを動的に調整しますか？
+  # プレイヤーの CPS が高いほど、不正行為検出時に得られる VL が高くなります
+  dynamic_cps_vl_weight: true
+
+  # クリック間隔バッファサイズ（変更しないでください！！！）
+  buffer_size: 20
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% が異常なクリックをしようとしました (Click) #1'
+    18: 'matrix notify %player% が異常なクリックをしようとしました (Click) #2'
+    30: 'matrix kick %player% 異常なクリック'
+
+## Move（移動速度検出）
+# プレイヤーの異常な移動を防止します
+move:
+  # この検出を有効にしますか？
+  enable: true
+
+  # Matrix は NoSlow チートをブロックしますか？
+  check_noslow: true
+
+  # Matrix は地面偽装/落下ダメージ無効チートを検出しますか？
+  check_nofall: true
+
+  # プレイヤーがこの VL に達すると、異常な移動の引き戻しを開始します
+  cancel_vl: 35
+
+  # プレイヤーが引き戻された時に Matrix はダメージを与えますか？
+  apply_damage: true
+
+  # Matrix はキャンセルされたブロックの上にプレイヤーが立つことを許可しますか？
+  # 有効にすることは推奨しません。パフォーマンスにわずかに影響し、バイパスの原因となります
+  # https://www.youtube.com/watch?v=9lNXNW6Phk0&t=133s
+  allow_bpe_bridge: false
+
+  # Matrix は飛行能力を持つプレイヤーの速度を検出しますか？
+  # 一部の "PvP クライアント" の飛行機能が制限される場合があります
+  check_flying_players: false
+
+  # プレイヤーが移動中にインベントリを使用しているか検出します
+  check_inventory_move: true
+
+  # プレイヤーが奈落でチートした場合、Matrix はプレイヤーを奈落にテレポートしますか？
+  allow_setback_to_void: true
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 10
+    amount: 45
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    55: 'matrix notify %player% が異常な移動をしようとしました (Move) #1'
+    90: 'matrix notify %player% が異常な移動をしようとしました (Move) #2'
+    320: 'matrix kick %player% 異常な移動'
+
+## BadPackets（不正パケット）
+# プレイヤーが大量の移動パケットや不正なパケットを送信することを防止します
+badpackets:
+  # この検出を有効にしますか？
+  enable: true
+
+  # Matrix はプレイヤーが空中にブロックを設置することをブロックしますか？
+  # プレイヤーはブロックを設置するために別のブロックに接している必要があります
+  # ただし Litematica などの設計図 Mod にはこの機能があるため、
+  # 設計図 Mod の使用を許可する場合はオフにできます
+  check_air_place: true
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 25
+
+  # プレイヤーがこの VL に達すると、タイマーの引き戻しを開始します
+  cancel_vl: 3
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    100: 'matrix notify %player% がサーバーに異常なパケットを送信しています (BadPackets) #1'
+    150: 'matrix notify %player% がサーバーに異常なパケットを送信しています (BadPackets) #2'
+    240: 'matrix kick %player% 異常なパケット送信'
+
+## Delay（ディレイ検出）
+# プレイヤーが食事や回復などの特定のアクションを加速することを防止します
+delay:
+  # この検出を有効にしますか？
+  enable: true
+
+  # 不正行為を検出した時、Matrix はプレイヤーのアクションをブロックしますか？
+  cancel_action: true
+
+  # モジュール一覧
+  # 各モジュールの VL の重みを定義できます。-1 で無効化します
+  check_healing: 1
+  check_using_items: 1
+  check_using_bow: 1
+  check_auto_splash: 2
+  check_inventory_action: 1
+  check_auto_totem: 1
+  check_auto_crossbow: 1
+  check_fast_throw: 1
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 2
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    3: 'matrix notify %player% がアクションを加速しようとしています (Delay) #1'
+    5: 'matrix notify %player% がアクションを加速しようとしています (Delay) #2'
+    10: 'matrix kick %player% アクションの加速'
+
+## Block（ブロック検出）
+# プレイヤーがブロックを素早く破壊・設置することを防止します
+block:
+  # この検出を有効にしますか？
+  enable: true
+
+  # 不正な破壊/設置をキャンセルするために必要な違反回数（-1 = キャンセルしない）
+  cancel_vl: 5
+
+  # モジュール一覧
+  # ここで一部のモジュールを無効にできます
+  modules:
+    # プレイヤーがブロックを素早く破壊していることを検出します
+    fastbreak:
+      enable: true
+      vl_weight: 4
+    # プレイヤーがブロックを素早く設置していることを検出します
+    fastplace:
+      enable: true
+      vl_weight: 1
+      max_place_per_second: 9
+    # プレイヤーが手を振らずにブロックを設置していることを検出します
+    noswing:
+      enable: true
+      vl_weight: 1
+    # プレイヤーが破壊中止パケットを送信しないことを検出します
+    abort:
+      enable: true
+      vl_weight: 0
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 8
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% がブロックを素早く設置/破壊しようとしました (FastPlace/FastBreak)'
+    20: 'matrix kick %player% FastPlace/FastBreak ハック'
+
+## Scaffold（スキャフォールド検出）
+# プレイヤーが通常速度より速くブリッジやタワーを行うことを防止します
+scaffold:
+  # この検出を有効にしますか？
+  enable: true
+
+  # キャンセル VL
+  cancel_vl: 15
+
+  # モジュール
+  modules:
+    # プレイヤーが素早くブリッジしていることを検出します
+    place:
+      enable: true
+      vl_weight: 7
+      check_jump: true
+
+    # プレイヤーのブリッジが速すぎることを防止します
+    delay:
+      enable: true
+      vl_weight: 5
+      cancel_place: true
+      min_delay: 6
+      min_delay_diagonal: 3
+
+    # プレイヤーの右クリックが速すぎることを防止します
+    right_cps:
+      enable: true
+      vl_weight: 5
+      max_cps: 29
+
+    # プレイヤーが素早くタワーしていることを検出します
+    tower:
+      enable: true
+      vl_weight: 2
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 6
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% が素早くブリッジしようとしました (Scaffold)'
+    15: 'matrix notify %player% が素早くブリッジしようとしました (Scaffold) #2'
+    24: 'matrix kick %player% Scaffold/Tower'
+
+## Jesus（水上歩行検出）
+# プレイヤーが液体中で速く移動したり、液体の上を歩くことを防止します
+jesus:
+  # この検出を有効にしますか？
+  enable: true
+
+  # 不正な移動をキャンセルするために必要な違反回数（-1 = キャンセルしない）
+  cancel_vl: 15
+
+  # Matrix はプレイヤーが泳いでいるかどうかを無視しますか？
+  # この機能は泳ぎ状態の非同期を防ぐことができます
+  ignore_swim_pose: false
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 10
+    amount: 10
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    20: 'matrix notify %player% が液体中で不正に移動しようとしました (Jesus)'
+    40: 'matrix notify %player% が液体中で不正に移動しようとしました (Jesus) #2'
+    50: 'matrix kick %player% Jesus/WaterSpeed/WaterFly ハック'
+
+## Velocity（ノックバック検出）
+# プレイヤーのアンチノックバックハックの使用を防止します
+velocity:
+  # この検出を有効にしますか？
+  enable: true
+
+  # プレイヤーがベロシティに応答するまでの待ち時間（tick）
+  # この時間後にプレイヤーがベロシティに応答しない場合、検出されます
+  wait_time: 20
+
+  # ラグプレイヤーを無視します。この機能はラグまたは
+  # リソースパック切り替え中のプレイヤーを無視できます
+  ignore_lag: true
+
+  # ベロシティ検出モジュールの VL の重み（-1 = 無効）
+  modules:
+    respond: 5
+    vertical: 1
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 3
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% がサーバーのベロシティを無視しようとしました (Velocity)'
+    15: 'matrix notify %player% がサーバーのベロシティを無視しようとしました (Velocity) #2'
+    20: 'matrix kick %player% Velocity/アンチノックバック'
+
+## Spam（スパム検出）
+# プレイヤーがサーバーチャットでスパムすることを防止します
+chat:
+  # この検出を有効にしますか？
+  enable: true
+
+  # メッセージ間の最小時間（秒）
+  min_time: 3
+
+  # メッセージ送信をキャンセルするために必要な違反回数（-1 = キャンセルしない）
+  cancel_vl: 3
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 30
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    4: 'matrix notify %player% がチャットをスパムしています (ChatSpam)'
+    10: 'matrix kick %player% チャットスパムを停止してください！'
+
+## Interact（インタラクション検出）
+# プレイヤーがエンティティやブロックと不正にインタラクションすることを防止します
+interact:
+  # この検出を有効にしますか？
+  enable: true
+
+  # どのバージョンのインタラクション検出を使用しますか？
+  # v1 = 旧バージョン
+  # v2 = 新バージョン（1.8/1.12/1.19+ のみ対応）
+  mode: "v1"
+
+  # Matrix はプレイヤーの異常なインタラクションをより厳しく防止しますか？（デフォルト：false）
+  # 誤検知が発生する可能性がありますが、より多くのハックを防止できます
+  strict: false
+
+  check_interact_block: true
+  check_attack: true
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 10
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% がエンティティ/ブロックと不正にインタラクションしようとしました (Interact)'
+    15: 'matrix kick %player% エンティティ/ブロックとの不正なインタラクション'
+
+## Phase（フェーズ検出）
+# プレイヤーがブロックを通り抜けることを防止します
+phase:
+  # この検出を有効にしますか？
+  enable: false
+
+  # プレイヤーが頻繁にブロックを通過しようとした場合、Matrix がプレイヤーの
+  # 移動を防止する時間は？（ミリ秒）
+  freeze_time: 400
+
+  # 不正な移動をキャンセルするために必要な違反回数
+  cancel_vl: 5
+
+  # 除外するブロックタイプ
+  exclude_types: []
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 10
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    7: 'matrix notify %player% がブロックを通過しています (Phase)'
+    13: 'matrix notify %player% がブロックを通過しています (Phase) #2'
+
+## AutoBot（オートボット検出）
+# Baritone などのボット Mod の使用を防止します
+# 注意：この検出はプレミアムユーザーのみ有効です
+autobot:
+  # この検出を有効にしますか？
+  enable: true
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 2
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    5: 'matrix notify %player% が自動ボットの使用が疑われます (AutoBot)'
+    10: 'matrix notify %player% が自動ボットの使用が疑われます (AutoBot) #2'
+    15: 'matrix kick %player% オートボット'
+
+## Elytra（エリトラ検出）
+# Elytra+、ElytraFlight などの使用を防止します
+# 1.9+ のみ動作します
+elytra:
+  # この検出を有効にしますか？
+  enable: true
+
+  # Matrix は著しく不正行為を行っているプレイヤーを強制的に引き戻しますか？
+  # cancel_vl に達していなくても（デフォルト：true）
+  force_setback: true
+
+  # 引き戻し違反レベル（-1 = 引き戻さない）
+  setback_vl: 5
+
+  # エリトラ装備解除 VL
+  # プレイヤーがこの VL に達すると、Matrix は滑空状態を解除します（-1 = 無効）
+  unequip_vl: 20
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 7
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    10: 'matrix notify %player% がエリトラ飛行の使用が疑われます (Elytra)'
+    20: 'matrix notify %player% がエリトラ飛行の使用が疑われます (Elytra) #2'
+    40: 'matrix kick %player% エリトラ飛行'
+
+## Vehicle（乗り物検出）
+# VehicleFlight、VehicleSpeed、EntitySpeed などの使用を防止します
+# 1.9+ のみ動作します
+vehicle:
+  # この検出を有効にしますか？
+  enable: true
+
+  # 特定の生物を乗り物として使用することを禁止します
+  # すべてのエンティティタイプ：https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  deny_entity_types_as_vehicle:
+    - 'LLAMA'
+
+  # 乗り物速度 / エンティティ速度
+  speed:
+    # このモジュールを有効にしますか？
+    enable: true
+
+    # 引き戻し VL（-1 = 引き戻しを無効化）
+    setback_vl: 2
+
+  # 乗り物飛行 / ボート飛行
+  flight:
+    # このモジュールを有効にしますか？
+    enable: true
+
+    # 引き戻し VL（-1 = 引き戻さない）
+    setback_vl: 4
+
+    # 乗り物から降りる VL（-1 = 降りさせない）
+    leave_vehicle: 10
+
+  # VL 減衰間隔（秒）と減衰ステップサイズのカスタム設定
+  decay:
+    interval: 15
+    amount: 5
+
+  # 違反閾値
+  # 違反回数: '<コマンド>'
+  commands:
+    5: 'matrix notify %player% が乗り物チートの使用が疑われます (Vehicle)'
+    10: 'matrix notify %player% が乗り物チートの使用が疑われます (Vehicle) #2'
+    17: 'matrix kick %player% 不審な乗り物移動'
