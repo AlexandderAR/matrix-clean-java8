@@ -1,47 +1,31 @@
-# Matrix
+Matrix
+Proyecto Gradle del plugin Matrix 7.25.1. Los fuentes se encuentran en src/main/java, los recursos y plantillas de configuración en src/main/resources.
+Compilación en Windows
+Se necesitan JDK 8 y JDK 21 completos. Indique las rutas reales de los JDK instalados:
+PowerShell.\build.bat 'C:\Java\jdk8' 'C:\Java\jdk21'
+El script ejecuta assemble mediante Gradle 8.14.3 incluido, sin acceso a la red.
 
-Gradle-проект плагина Matrix 7.25.1. Исходники находятся в src/main/java,
-ресурсы и шаблоны конфигурации — в src/main/resources.
+Plugin listo: build/libs/Matrix-7.25.1-source-clean.jar.
+JDK 8 inicia Gradle y proporciona la API de Java 8. El compilador de JDK 21 es necesario para los SDK de servidor modernos; el bytecode del propio plugin tiene target Java 8.
 
-## Сборка на Windows
-
-Нужны полные JDK 8 и JDK 21. Задайте реальные пути к установленным JDK:
-
-```powershell
-.\build.bat 'C:\Java\jdk8' 'C:\Java\jdk21'
-```
-
-Скрипт запускает assemble через включённый Gradle 8.14.3 без доступа к сети.
-Готовый плагин: build/libs/Matrix-7.25.1-source-clean.jar.
-
-JDK 8 запускает Gradle и предоставляет Java 8 API. Компилятор JDK 21 нужен
-для современных серверных SDK; байткод самого плагина имеет target Java 8.
-JDK в проект не включены.
-
-Также можно использовать стандартный wrapper:
-
-```powershell
-$env:JAVA_HOME = 'C:\Java\jdk8'
+Los JDK no están incluidos en el proyecto.
+También se puede usar el wrapper estándar:
+PowerShell$env:JAVA_HOME = 'C:\Java\jdk8'
 $env:MATRIX_JAVA8_HOME = $env:JAVA_HOME
 $env:MATRIX_COMPILER_JAVA_HOME = 'C:\Java\jdk21'
 .\gradlew.bat --no-daemon assemble
-```
+En el primer uso el wrapper puede descargar Gradle. build.bat utiliza la distribución ya incluida y funciona sin descargar dependencias.
+Estructura
 
-При первом использовании wrapper может загрузить Gradle. build.bat использует
-уже включённый дистрибутив и работает без скачивания зависимостей.
+src/main/java — código del plugin;
+src/main/resources — descriptores del plugin, recursos y plantillas de configuración;
+lib/matrix-thirdparty-7.25.1.jar — bibliotecas de runtime;
+lib/compile — SDK y bibliotecas locales solo para compilación;
+build-support — herramientas de preparación de las bibliotecas de compilación;
+gradle/wrapper — wrapper estándar;
+tools/gradle-8.14.3 — Gradle para compilación autónoma;
+DEPENDENCIES.json — composición y sumas de control de las dependencias.
 
-## Структура
+Los adaptadores de servidor antiguos se compilan por separado con los SDK correspondientes.
 
-- src/main/java — код плагина;
-- src/main/resources — plugin descriptors, ресурсы и шаблоны настроек;
-- lib/matrix-thirdparty-7.25.1.jar — runtime-библиотеки;
-- lib/compile — локальные SDK и библиотеки только для компиляции;
-- build-support — инструменты подготовки библиотек компиляции;
-- gradle/wrapper — стандартный wrapper;
-- tools/gradle-8.14.3 — Gradle для автономной сборки;
-- DEPENDENCIES.json — состав и контрольные суммы зависимостей.
-
-Старые серверные адаптеры собираются отдельно с соответствующими SDK.
-Серверные SDK не включаются в результирующий плагин. Оригинальный JAR Matrix
-как зависимость сборки не используется. Согласованная offline-конфигурация
-сохранена. Сборка прошла; полная эквивалентность во всех сценариях не заявляется.
+Los SDK de servidor no se incluyen en el plugin resultante. El JAR original de Matrix no se utiliza como dependencia de compilación. Se ha conservado la configuración offline coherente. La compilación se realizó correctamente; no se garantiza la equivalencia completa en todos los escenarios.
