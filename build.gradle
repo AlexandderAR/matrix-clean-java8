@@ -1,0 +1,177 @@
+plugins { id 'java' }
+
+group = 'me.rerere.matrix'
+version = '7.25.1-source-clean'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// All dependencies are local. The original Matrix plugin JAR is never used.
+dependencies {
+    compileOnly files(layout.buildDirectory.file('compile-libraries/matrix-thirdparty.jar'))
+    runtimeOnly files('lib/matrix-thirdparty-7.25.1.jar')
+    // Keep server implementations off the shared compile path: NMS packages are
+    // reused across releases with incompatible method ABIs.
+    compileOnly files(fileTree(dir: 'lib/compile', include: ['*.jar']).files
+            .findAll { !it.name.matches('^(79-server|80-sdk-|80-server-|81-server-|82-server-|83-server-|84-server-|85-server-|86-server-|87-server-|88-server-|89-server-|90-derived-).*\\.jar$') }
+            .sort { it.name })
+}
+
+def java8Home = providers.gradleProperty('java8Home')
+        .orElse(providers.environmentVariable('MATRIX_JAVA8_HOME'))
+        .getOrElse('C:/Java/jdk8')
+def compilerHome = providers.gradleProperty('compilerJavaHome')
+        .orElse(providers.environmentVariable('MATRIX_COMPILER_JAVA_HOME'))
+        .getOrElse('C:/Java/jdk21')
+
+def supportClasses = layout.buildDirectory.dir('build-support-classes')
+def compileLibrary = layout.buildDirectory.file('compile-libraries/matrix-thirdparty.jar')
+tasks.register('compileLibraryPreparationTool', Exec) {
+    inputs.file('build-support/PrepareCompileLibrary.java')
+    outputs.dir(supportClasses)
+    doFirst { supportClasses.get().asFile.mkdirs() }
+    commandLine "${java8Home}/bin/javac.exe", '-encoding', 'UTF-8', '-d',
+            supportClasses.get().asFile.absolutePath, file('build-support/PrepareCompileLibrary.java').absolutePath
+}
+tasks.register('prepareCompileLibrary', Exec) {
+    dependsOn 'compileLibraryPreparationTool'
+    inputs.file('lib/matrix-thirdparty-7.25.1.jar')
+    outputs.file(compileLibrary)
+    commandLine "${java8Home}/bin/java.exe", '-cp', supportClasses.get().asFile.absolutePath,
+            'PrepareCompileLibrary', file('lib/matrix-thirdparty-7.25.1.jar').absolutePath,
+            compileLibrary.get().asFile.absolutePath
+}
+tasks.named('compileJava') { dependsOn 'prepareCompileLibrary' }
+
+def sdkRemapperSource = file('build-support/DeriveSpigotCompileSdk.java')
+def sdkRemapperClasses = layout.buildDirectory.dir('sdk-remapper-classes')
+def asmRemapperClasspath = files('lib/compile/10-110-asm-9.8.jar',
+        'lib/compile/10-111-asm-commons-9.8.jar')
+tasks.register('compileSdkRemapper', Exec) {
+    inputs.file(sdkRemapperSource)
+    inputs.files(asmRemapperClasspath)
+    outputs.dir(sdkRemapperClasses)
+    doFirst { sdkRemapperClasses.get().asFile.mkdirs() }
+    commandLine "${compilerHome}/bin/javac.exe", '-encoding', 'UTF-8', '-cp',
+            asmRemapperClasspath.asPath, '-d', sdkRemapperClasses.get().asFile.absolutePath,
+            sdkRemapperSource.absolutePath
+}
+def derived1206Sdk = file('lib/compile/90-derived-1.20.6.jar')
+tasks.register('deriveSpigot1206CompileSdk', Exec) {
+    dependsOn 'compileSdkRemapper'
+    inputs.file('lib/compile/80-sdk-1.20.6.jar')
+    inputs.file(sdkRemapperSource)
+    inputs.files(asmRemapperClasspath)
+    outputs.file(derived1206Sdk)
+    commandLine "${compilerHome}/bin/java.exe", '-cp',
+            files(sdkRemapperClasses, asmRemapperClasspath).asPath,
+            'DeriveSpigotCompileSdk', file('lib/compile/80-sdk-1.20.6.jar').absolutePath,
+            'META-INF/mappings/reobf.tiny', derived1206Sdk.absolutePath
+}
+
+def sdkCompileGroups = [
+        'v1_8_8' : [sdk: '79-server-1.8.8.jar', sources: [
+                'me/rerere/matrix/world/compatibility/LegacyCraftBukkit18BlockAccess.java',
+                'me/rerere/matrix/switches/LegacyDirectionSwitchMap.java']],
+        'v1_12_2' : [sdk: '80-server-1.12.2.jar', sources: [
+                'me/rerere/matrix/world/BukkitWorldQueries.java',
+                'me/rerere/matrix/world/EnumDirectionSwitchMap.java']],
+        // Exact approved Paper 1.13 build 173 SDK; CraftBukkit R1, not 1.13.1 R2.
+        'v1_13_R1' : [sdk: '80-sdk-1.13.jar', sources: [
+                'me/rerere/matrix/compat/LegacyCraftBukkit113BlockAccess.java']],
+        'v1_13_R2' : [sdk: '81-server-1.13.2.jar', sources: [
+                'me/rerere/matrix/world/V113R2WorldAdapter.java']],
+        'v1_14_R1' : [sdk: '80-sdk-1.14.4.jar', sources: [
+                'me/rerere/matrix/world/nms/v1_14/Legacy114WorldAccess.java']],
+        'v1_15_R1' : [sdk: '80-sdk-1.15.2.jar', sources: [
+                'me/rerere/matrix/compat/bukkit/Bukkit115Access.java']],
+        'v1_16_R1' : [sdk: '80-sdk-1.16.1.jar', sources: [
+                'me/rerere/matrix/world/Legacy116WorldAdapter.java']],
+        'v1_16_R2' : [sdk: '80-sdk-1.16.3.jar', sources: [
+                'me/rerere/matrix/world/Legacy116R2WorldAdapter.java']],
+        'v1_16_R3' : [sdk: '82-server-1.16.5.jar', sources: [
+                'me/rerere/matrix/world/V116R3WorldAdapter.java']],
+        'v1_17_R1' : [sdk: '83-server-1.17.jar', sources: [
+                'me/rerere/matrix/world/LegacyReflectiveWorldAdapter.java']],
+        'v1_18_R1' : [sdk: '80-sdk-1.18.1.jar', sources: [
+                'me/rerere/matrix/world/Bukkit18WorldAccess.java']],
+        'v1_18_R2' : [sdk: '84-server-1.18.2.jar', sources: [
+                'me/rerere/matrix/platform/bukkit/v1_18_R2/CraftBukkit118R2Access.java']],
+        'v1_19_R1' : [sdk: '85-server-1.19.2.jar', sources: [
+                'me/rerere/matrix/compat/nms/V119R1NmsAccess.java']],
+        'v1_19_R2' : [sdk: '86-server-1.19.3.jar', sources: [
+                'me/rerere/matrix/server/nms/v1_19_R2/ServerImplementation119R2.java']],
+        'v1_19_R3' : [sdk: '87-server-1.19.4.jar', sources: [
+                'me/rerere/matrix/world/V119R3WorldAdapter.java']],
+        'v1_20_R1' : [sdk: '80-sdk-1.20.1.jar', sources: [
+                'me/rerere/matrix/world/V120R1WorldAdapter.java']],
+        'v1_20_R2' : [sdk: '80-sdk-1.20.2.jar', sources: [
+                'me/rerere/matrix/world/CraftPhysicsAccess.java']],
+        'v1_20_R3' : [sdk: '88-server-1.20.4.jar', sources: [
+                'me/rerere/matrix/world/V120R3WorldAdapter.java']],
+        // The Mojang-named view is used by the generic 1.20.6 Paper adapters.
+        'v1_20_6_mojang' : [sdk: '80-sdk-1.20.6.jar', sources: [
+                'me/rerere/matrix/world/BukkitNmsBridge.java',
+                'me/rerere/matrix/world/ModernWorldAdapter.java']],
+        // NmsWorldAccess is authored against the actual v1_20_R4 package names.
+        'v1_20_R4' : [sdk: '90-derived-1.20.6.jar', sources: [
+                'me/rerere/matrix/world/NmsWorldAccess.java']],
+        'v1_21' : [sdk: '89-server-1.21.8.jar', sources: [
+                'me/rerere/matrix/world/NmsMethodAccess.java',
+                'me/rerere/matrix/world/ReflectiveWorldAdapter.java']]
+]
+
+def isolatedSdkSources = sdkCompileGroups.values().collectMany { it.sources }
+sourceSets.main.java.exclude(isolatedSdkSources)
+
+def isolatedSdkTasks = []
+sdkCompileGroups.each { groupName, groupConfig ->
+    def sdkFile = file("lib/compile/${groupConfig.sdk}")
+    def outputDir = layout.buildDirectory.dir("classes/java/sdk-${groupName}")
+    def taskName = "compileSdk${groupName.replaceAll(/[^A-Za-z0-9]/, '_').capitalize()}Java"
+    def compileTask = tasks.register(taskName, JavaCompile) {
+        group = 'build'
+        description = "Compile ${groupName} adapters against ${groupConfig.sdk} only."
+        dependsOn tasks.named('compileJava')
+        source = files(groupConfig.sources.collect { file("src/main/java/${it}") })
+        destinationDirectory = outputDir
+        // Exact SDK first. Common compile dependencies deliberately contain no
+        // other Minecraft server SDK, so javac cannot resolve another release.
+        classpath = files(sdkFile, layout.buildDirectory.dir('classes/java/main'),
+                configurations.compileClasspath)
+        doFirst {
+            if (!sdkFile.isFile()) {
+                throw new GradleException("Missing exact NMS compile SDK for ${groupName}: ${sdkFile}; " +
+                        'refusing to substitute a different Minecraft ABI.')
+            }
+        }
+        inputs.file(sdkFile)
+        outputs.dir(outputDir)
+        if (groupConfig.sdk == '90-derived-1.20.6.jar') dependsOn 'deriveSpigot1206CompileSdk'
+    }
+    isolatedSdkTasks.add(compileTask)
+}
+tasks.named('classes') { dependsOn isolatedSdkTasks }
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.fork = true
+    options.forkOptions.javaHome = file(compilerHome)
+    // A modern compiler reads modern server SDKs; source, bytecode and Java APIs stay Java 8.
+    options.bootstrapClasspath = files(
+            "${java8Home}/jre/lib/rt.jar", "${java8Home}/jre/lib/jce.jar",
+            "${java8Home}/jre/lib/jsse.jar", "${java8Home}/jre/lib/charsets.jar")
+    options.compilerArgs += ['-proc:none', '-Xmaxerrs', '3000', '-XDcompilePolicy=simple',
+            '-XDshould-stop.ifError=FLOW']
+}
+
+tasks.named('jar', Jar) {
+    dependsOn isolatedSdkTasks
+    archiveBaseName = 'Matrix'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    isolatedSdkTasks.each { isolatedTask -> from(isolatedTask.map { it.destinationDirectory }) }
+    from { configurations.runtimeClasspath.collect { zipTree(it) } }
+    exclude 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'META-INF/INDEX.LIST'
+}
